@@ -15,7 +15,7 @@ import {
   incrementAsync,
   incrementIfOdd,
   selectCount,
-} from "./productListSlice";
+} from "../productListSlice";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
