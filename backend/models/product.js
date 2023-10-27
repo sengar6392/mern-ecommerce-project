@@ -32,15 +32,15 @@ const productSchema = new Schema({
   deleted: { type: Boolean, default: false },
 });
 
-// productSchema.virtual("id").get(function () {
-//   return this._id;
-// });
-// productSchema.set("toJSON", {
-//   virtuals: true,
-//   versionKey: false,
-//   transform: (doc, ret) => {
-//     delete ret._id;
-//   },
-// });
+productSchema.virtual("id").get(function () {
+  return this._id;
+});
+productSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: (doc, ret) => {
+    delete ret._id;
+  },
+});
 
 exports.Product = mongoose.model("Product", productSchema);

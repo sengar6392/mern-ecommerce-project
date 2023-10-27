@@ -16,10 +16,11 @@ exports.fetchAllProducts = async (req, res) => {
   }
   let query = Product.find(condition);
   if (req.query.category) {
-    query = query.find({ category: req.query.category });
+    
+    query = query.find({ category: {$in:req.query.category.split(',')} });
   }
   if (req.query.brand) {
-    query = query.find({ brand: req.query.brand });
+    query = query.find({ brand: {$in:req.query.brand.split(',')} });
   }
   if (req.query._page && req.query._limit) {
     const pageSize = req.query._limit;
@@ -34,7 +35,7 @@ exports.fetchAllProducts = async (req, res) => {
     // const count = docs.length;
     // console.log("count",count)
     // res.set("X-Total-Count",count)
-    res.status(200).json({ message: "success", data: docs });
+    res.status(200).json(docs);
   } catch (error) {
     console.log("Error fetching all products: ", error);
     res.status(400).json({ message: "Fetch failed." + error });
@@ -45,7 +46,7 @@ exports.fetchProductById = async (req, res) => {
   const { id } = req.params;
   try {
     const product = await Product.findById(id);
-    res.status(200).json({ message: "success", data: product });
+    res.status(200).json(product);
   } catch (err) {
     console.log("Error getting the product", err);
     res.status(400).json(err);

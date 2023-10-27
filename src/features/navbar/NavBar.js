@@ -31,7 +31,6 @@ function classNames(...classes) {
 }
 
 const NavBar = ({ children }) => {
-  console.log("children", children);
   return (
     <>
       <div className="min-h-full">

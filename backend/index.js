@@ -29,9 +29,6 @@ async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/test");
   console.log("database connected");
 }
-server.get("/", (req, res) => {
-  res.send("hiiiiii");
-});
 
 server.listen(8080, () => {
   console.log("Server is running on port 8080");

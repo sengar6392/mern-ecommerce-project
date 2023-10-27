@@ -13,61 +13,19 @@ import {
   StarIcon,
 } from "@heroicons/react/20/solid";
 import {
-  increment,
-  incrementByAmount,
-  incrementAsync,
-  incrementIfOdd,
-  selectCount,
   fetchAllProductsAsync,
+  fetchBrandsAsync,
+  fetchCategoriesAsync,
+  fetchProductByIdAsync,
 } from "../productSlice";
 import { Link } from "react-router-dom";
 
 const sortOptions = [
-  { name: "Most Popular", href: "#", current: true },
-  { name: "Best Rating", href: "#", current: false },
-  { name: "Newest", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
+  { name: "Best Rating", sort:"rating",order:"desc", current: false },
+  { name: "Price: Low to High", sort:"price",order:"asc", current: false },
+  { name: "Price: High to Low", sort:"price",order:"desc", current: false },
 ];
 
-const filters = [
-  {
-    id: "color",
-    name: "Color",
-    options: [
-      { value: "white", label: "White", checked: false },
-      { value: "beige", label: "Beige", checked: false },
-      { value: "blue", label: "Blue", checked: true },
-      { value: "brown", label: "Brown", checked: false },
-      { value: "green", label: "Green", checked: false },
-      { value: "purple", label: "Purple", checked: false },
-    ],
-  },
-  {
-    id: "category",
-    name: "Category",
-    options: [
-      { value: "new-arrivals", label: "New Arrivals", checked: false },
-      { value: "sale", label: "Sale", checked: false },
-      { value: "travel", label: "Travel", checked: true },
-      { value: "organization", label: "Organization", checked: false },
-      { value: "accessories", label: "Accessories", checked: false },
-    ],
-  },
-  {
-    id: "size",
-    name: "Size",
-    options: [
-      { value: "2l", label: "2L", checked: false },
-      { value: "6l", label: "6L", checked: false },
-      { value: "12l", label: "12L", checked: false },
-      { value: "18l", label: "18L", checked: false },
-      { value: "20l", label: "20L", checked: false },
-      { value: "40l", label: "40L", checked: true },
-    ],
-  },
-];
-// const products = [
 //   {
 //     id: 1,
 //     name: "Basic Tee",
@@ -714,11 +672,56 @@ export default function ProductList() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products);
-  useEffect(() => {
-    dispatch(fetchAllProductsAsync());
-  }, [dispatch]);
+  const brandOptions = useSelector((state) => state.product.brands);
+  const categoryOptions = useSelector((state) => state.product.categories);
+  const status = useSelector((state) => state.product.status);
+  const [filter, setFilter] = useState({});
+  const [sort, setSort] = useState({});
 
-  console.log("list", products);
+  const filtersList = [
+    {
+      id: "category",
+      name: "Category",
+      options: categoryOptions,
+    },
+    {
+      id: "brand",
+      name: "Brands",
+      options: brandOptions,
+    },
+  ];
+
+
+  const handleFilter = (e, section, option) => {
+    const newFilter = { ...filter };
+    if (e.target.checked) {
+      if (newFilter[section.id]) {
+        newFilter[section.id].push(option.value);
+      } else {
+        newFilter[section.id] = [option.value];
+      }
+    } else {
+      let index = newFilter[section.id].indexOf(option.value);
+      if (index !== -1) {
+        newFilter[section.id].splice(index, 1);
+      }
+    }
+    setFilter(newFilter);
+  };
+
+  const handleSort=(option)=>{
+    const newSort={_sort:option.sort,_order:option.order}
+    setSort(newSort)
+  }
+
+  useEffect(() => {
+    dispatch(fetchAllProductsAsync({filter,sort}));
+  }, [filter,sort, dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchBrandsAsync());
+    dispatch(fetchCategoriesAsync());
+  }, []);
 
   return (
     <>
@@ -772,7 +775,7 @@ export default function ProductList() {
                     <form className="mt-4 border-t border-gray-200">
                       <h3 className="sr-only">Categories</h3>
 
-                      {filters.map((section) => (
+                      {filtersList.map((section) => (
                         <Disclosure
                           as="div"
                           key={section.id}
@@ -814,6 +817,9 @@ export default function ProductList() {
                                         type="checkbox"
                                         defaultChecked={option.checked}
                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        onChange={(e) =>
+                                          handleFilter(e, section, option)
+                                        }
                                       />
                                       <label
                                         htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
@@ -868,8 +874,8 @@ export default function ProductList() {
                         {sortOptions.map((option) => (
                           <Menu.Item key={option.name}>
                             {({ active }) => (
-                              <a
-                                href={option.href}
+                              <p
+                                onClick={()=>handleSort(option)}
                                 className={classNames(
                                   option.current
                                     ? "font-medium text-gray-900"
@@ -879,7 +885,7 @@ export default function ProductList() {
                                 )}
                               >
                                 {option.name}
-                              </a>
+                              </p>
                             )}
                           </Menu.Item>
                         ))}
@@ -916,7 +922,7 @@ export default function ProductList() {
                 <form className="hidden lg:block">
                   <h3 className="sr-only">Categories</h3>
 
-                  {filters.map((section) => (
+                  {filtersList.map((section) => (
                     <Disclosure
                       as="div"
                       key={section.id}
@@ -958,6 +964,9 @@ export default function ProductList() {
                                     type="checkbox"
                                     defaultChecked={option.checked}
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    onChange={(e) =>
+                                      handleFilter(e, section, option)
+                                    }
                                   />
                                   <label
                                     htmlFor={`filter-${section.id}-${optionIdx}`}
@@ -982,7 +991,10 @@ export default function ProductList() {
                     <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-0">
                       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                         {products.map((product) => (
-                          <div key={product.id} className="group relative p-2 border rounded-md">
+                          <div
+                            key={product.id}
+                            className="group relative p-2 border rounded-md"
+                          >
                             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                               <img
                                 src={product.thumbnail}
@@ -993,7 +1005,7 @@ export default function ProductList() {
                             <div className="mt-4 flex justify-between">
                               <div>
                                 <h3 className="text-sm text-gray-700">
-                                  <Link to='/product-detail'>
+                                  <Link to="/product-detail">
                                     <span
                                       aria-hidden="true"
                                       className="absolute inset-0"
@@ -1002,7 +1014,7 @@ export default function ProductList() {
                                   </Link>
                                 </h3>
                                 <p className="mt-1 text-sm text-gray-500 flex gap-1 content-center">
-                                  <StarIcon className="h-6 w-6"/>
+                                  <StarIcon className="h-6 w-6" />
                                   {product.rating}
                                 </p>
                               </div>
