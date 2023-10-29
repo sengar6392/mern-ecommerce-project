@@ -19,11 +19,12 @@ import {
   fetchProductByIdAsync,
 } from "../productSlice";
 import { Link } from "react-router-dom";
+import { ITEMS_PER_PAGE } from "../../../app/constants";
 
 const sortOptions = [
-  { name: "Best Rating", sort:"rating",order:"desc", current: false },
-  { name: "Price: Low to High", sort:"price",order:"asc", current: false },
-  { name: "Price: High to Low", sort:"price",order:"desc", current: false },
+  { name: "Best Rating", sort: "rating", order: "desc", current: false },
+  { name: "Price: Low to High", sort: "price", order: "asc", current: false },
+  { name: "Price: High to Low", sort: "price", order: "desc", current: false },
 ];
 
 //   {
@@ -672,11 +673,14 @@ export default function ProductList() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products);
+  const totalProducts = useSelector((state) => state.product.totalProducts);
   const brandOptions = useSelector((state) => state.product.brands);
   const categoryOptions = useSelector((state) => state.product.categories);
   const status = useSelector((state) => state.product.status);
+
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
+  const [page, setPage] = useState(1);
 
   const filtersList = [
     {
@@ -690,7 +694,6 @@ export default function ProductList() {
       options: brandOptions,
     },
   ];
-
 
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter };
@@ -709,14 +712,23 @@ export default function ProductList() {
     setFilter(newFilter);
   };
 
-  const handleSort=(option)=>{
-    const newSort={_sort:option.sort,_order:option.order}
-    setSort(newSort)
-  }
+  const handleSort = (option) => {
+    const newSort = { _sort: option.sort, _order: option.order };
+    setSort(newSort);
+  };
+
+  const handlePage = (page) => {
+    setPage(page);
+  };
 
   useEffect(() => {
-    dispatch(fetchAllProductsAsync({filter,sort}));
-  }, [filter,sort, dispatch]);
+    const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
+    dispatch(fetchAllProductsAsync({ filter, sort, pagination }));
+  }, [filter, sort, page, dispatch]);
+
+  useEffect(()=>{
+    setPage(1)
+  },[totalProducts,sort])
 
   useEffect(() => {
     dispatch(fetchBrandsAsync());
@@ -875,7 +887,7 @@ export default function ProductList() {
                           <Menu.Item key={option.name}>
                             {({ active }) => (
                               <p
-                                onClick={()=>handleSort(option)}
+                                onClick={() => handleSort(option)}
                                 className={classNames(
                                   option.current
                                     ? "font-medium text-gray-900"
@@ -1032,25 +1044,30 @@ export default function ProductList() {
             </section>
             <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
               <div className="flex flex-1 justify-between sm:hidden">
-                <a
+                <div
                   href="#"
                   className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                   Previous
-                </a>
-                <a
+                </div>
+                <div
                   href="#"
                   className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                   Next
-                </a>
+                </div>
               </div>
               <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm text-gray-700">
-                    Showing <span className="font-medium">1</span> to{" "}
-                    <span className="font-medium">10</span> of{" "}
-                    <span className="font-medium">97</span> results
+                    Showing{" "}
+                    <span className="font-medium">
+                      {(page - 1) * ITEMS_PER_PAGE + 1}
+                    </span>{" "}
+                    to{" "}
+                    <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + products.length}</span>{" "}
+                    of <span className="font-medium">{totalProducts}</span>{" "}
+                    results
                   </p>
                 </div>
                 <div>
@@ -1058,55 +1075,31 @@ export default function ProductList() {
                     className="isolate inline-flex -space-x-px rounded-md shadow-sm"
                     aria-label="Pagination"
                   >
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                    >
+                    <div className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
                       <span className="sr-only">Previous</span>
                       <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-                    </a>
+                    </div>
+                    {Array.from({
+                      length: Math.ceil(totalProducts / ITEMS_PER_PAGE),
+                    }).map((_, index) => (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          handlePage(index + 1);
+                        }}
+                        aria-current="page"
+                        className={`cursor-pointer relative z-10 inline-flex items-center ${
+                          index + 1 === page
+                            ? "bg-indigo-600 text-white"
+                            : "text-gray-400"
+                        }  px-4 py-2 text-sm font-semibold  focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                      >
+                        {index + 1}
+                      </div>
+                    ))}
                     {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-                    <a
-                      href="#"
-                      aria-current="page"
-                      className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                      1
-                    </a>
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                    >
-                      2
-                    </a>
-                    <a
-                      href="#"
-                      className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-                    >
-                      3
-                    </a>
-                    <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
-                      ...
-                    </span>
-                    <a
-                      href="#"
-                      className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-                    >
-                      8
-                    </a>
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                    >
-                      9
-                    </a>
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                    >
-                      10
-                    </a>
-                    <a
+
+                    <div
                       href="#"
                       className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                     >
@@ -1115,7 +1108,7 @@ export default function ProductList() {
                         className="h-5 w-5"
                         aria-hidden="true"
                       />
-                    </a>
+                    </div>
                   </nav>
                 </div>
               </div>

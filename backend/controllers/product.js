@@ -10,18 +10,28 @@ exports.createProduct = async (req, res) => {
   }
 };
 exports.fetchAllProducts = async (req, res) => {
-  let condition={}
-  if(!req.query.admin){
-    condition.deleted={$ne:true}
+  let condition = {};
+  if (!req.query.admin) {
+    condition.deleted = { $ne: true };
   }
   let query = Product.find(condition);
+  let totalProductsQuery = Product.find(condition);
+
   if (req.query.category) {
-    
-    query = query.find({ category: {$in:req.query.category.split(',')} });
+    query = query.find({ category: { $in: req.query.category.split(",") } });
+    totalProductsQuery = totalProductsQuery.find({
+      category: { $in: req.query.category.split(",") },
+    });
   }
   if (req.query.brand) {
-    query = query.find({ brand: {$in:req.query.brand.split(',')} });
+    query = query.find({ brand: { $in: req.query.brand.split(",") } });
+    totalProductsQuery = totalProductsQuery.find({
+      brand: { $in: req.query.brand.split(",") },
+    });
   }
+
+  const totalProducts=await totalProductsQuery.count().exec()
+  
   if (req.query._page && req.query._limit) {
     const pageSize = req.query._limit;
     const page = req.query._page;
@@ -32,9 +42,7 @@ exports.fetchAllProducts = async (req, res) => {
   }
   try {
     const docs = await query.exec();
-    // const count = docs.length;
-    // console.log("count",count)
-    // res.set("X-Total-Count",count)
+    res.set("X-Total-Count",totalProducts)
     res.status(200).json(docs);
   } catch (error) {
     console.log("Error fetching all products: ", error);
@@ -56,10 +64,10 @@ exports.fetchProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
   try {
-    const product=await Product.findByIdAndUpdate(id, req.body, {
+    const product = await Product.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    res.status(200).json({ message: `Updated successfully`,product });
+    res.status(200).json({ message: `Updated successfully`, product });
   } catch (err) {
     console.log("Error updating the product", err);
     res.status(400).json(err);
