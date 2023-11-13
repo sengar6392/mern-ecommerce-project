@@ -2,6 +2,7 @@ import React, { useState, Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Grid } from "react-loader-spinner";
 import {
   ChevronDownIcon,
   FunnelIcon,
@@ -695,6 +696,7 @@ export default function ProductList() {
     },
   ];
 
+  const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter };
     if (e.target.checked) {
@@ -726,9 +728,9 @@ export default function ProductList() {
     dispatch(fetchAllProductsAsync({ filter, sort, pagination }));
   }, [filter, sort, page, dispatch]);
 
-  useEffect(()=>{
-    setPage(1)
-  },[totalProducts,sort])
+  useEffect(() => {
+    setPage(1);
+  }, [totalProducts, sort]);
 
   useEffect(() => {
     dispatch(fetchBrandsAsync());
@@ -1003,38 +1005,38 @@ export default function ProductList() {
                     <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-0">
                       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                         {products.map((product) => (
-                          <div
+                          <Link
+                            to={`/product-detail/${product.id}`}
                             key={product.id}
-                            className="group relative p-2 border rounded-md"
                           >
-                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                              <img
-                                src={product.thumbnail}
-                                alt={product.title}
-                                className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                              />
-                            </div>
-                            <div className="mt-4 flex justify-between">
-                              <div>
-                                <h3 className="text-sm text-gray-700">
-                                  <Link to="/product-detail">
+                            <div className="group relative p-2 border rounded-md">
+                              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                                <img
+                                  src={product.thumbnail}
+                                  alt={product.title}
+                                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                                />
+                              </div>
+                              <div className="mt-4 flex justify-between">
+                                <div>
+                                  <h3 className="text-sm text-gray-700">
                                     <span
                                       aria-hidden="true"
                                       className="absolute inset-0"
                                     />
                                     {product.title}
-                                  </Link>
-                                </h3>
-                                <p className="mt-1 text-sm text-gray-500 flex gap-1 content-center">
-                                  <StarIcon className="h-6 w-6" />
-                                  {product.rating}
+                                  </h3>
+                                  <p className="mt-1 text-sm text-gray-500 flex gap-1 content-center">
+                                    <StarIcon className="h-6 w-6" />
+                                    {product.rating}
+                                  </p>
+                                </div>
+                                <p className="text-sm font-medium text-gray-900">
+                                  ${product.price}
                                 </p>
                               </div>
-                              <p className="text-sm font-medium text-gray-900">
-                                {product.price}
-                              </p>
                             </div>
-                          </div>
+                          </Link>
                         ))}
                       </div>
                     </div>
@@ -1045,13 +1047,15 @@ export default function ProductList() {
             <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
               <div className="flex flex-1 justify-between sm:hidden">
                 <div
-                  href="#"
+                  onClick={(e) => handlePage(page > 1 ? page - 1 : page)}
                   className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                   Previous
                 </div>
                 <div
-                  href="#"
+                  onClick={(e) =>
+                    handlePage(page < totalPages ? page + 1 : page)
+                  }
                   className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                   Next
@@ -1065,7 +1069,9 @@ export default function ProductList() {
                       {(page - 1) * ITEMS_PER_PAGE + 1}
                     </span>{" "}
                     to{" "}
-                    <span className="font-medium">{(page - 1) * ITEMS_PER_PAGE + products.length}</span>{" "}
+                    <span className="font-medium">
+                      {(page - 1) * ITEMS_PER_PAGE + products.length}
+                    </span>{" "}
                     of <span className="font-medium">{totalProducts}</span>{" "}
                     results
                   </p>
@@ -1075,7 +1081,10 @@ export default function ProductList() {
                     className="isolate inline-flex -space-x-px rounded-md shadow-sm"
                     aria-label="Pagination"
                   >
-                    <div className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                    <div
+                      onClick={(e) => handlePage(page > 1 ? page - 1 : page)}
+                      className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+                    >
                       <span className="sr-only">Previous</span>
                       <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                     </div>
@@ -1100,7 +1109,9 @@ export default function ProductList() {
                     {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
 
                     <div
-                      href="#"
+                      onClick={(e) =>
+                        handlePage(page < totalPages ? page + 1 : page)
+                      }
                       className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                     >
                       <span className="sr-only">Next</span>

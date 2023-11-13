@@ -63,8 +63,14 @@ export const productSlice = createSlice({
       state.categories = action.payload;
     });
     
+    builder.addCase(fetchProductByIdAsync.pending, (state, action) => {
+      state.status = "loading";
+      
+    });
     builder.addCase(fetchProductByIdAsync.fulfilled, (state, action) => {
+      state.status = "idle"
       state.selectedProduct = action.payload;
+      
     });
   },
 });

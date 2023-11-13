@@ -1,6 +1,7 @@
 import React from "react";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
+import Cart from "../features/cart/Cart";
 
 const people = [
   {
@@ -316,8 +317,6 @@ const CheckoutPage = () => {
               </fieldset>
             </div>
           </div>
-
-          
         </form>
         <div className="bg-white mb-auto">
           <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
@@ -409,6 +408,7 @@ const CheckoutPage = () => {
             </div>
           </div>
         </div>
+        
       </div>
     </>
   );

@@ -27,8 +27,8 @@ exports.addToCart = async (req, res) => {
 exports.deleteCart = async (req, res) => {
     const { id } = req.params;
     try {
-      await Cart.findByIdAndDelete(id);
-      res.status(200).json({ message: `deleted successfully`});
+      const result=await Cart.findByIdAndDelete(id);
+      res.status(200).json(result);
     } catch (err) {
       console.log("Error deleting the cart item", err);
       res.status(400).json(err);
@@ -41,7 +41,7 @@ exports.updateCart = async (req, res) => {
         new: true,
       });
       const result=await cart.populate("product")
-      res.status(200).json({ message: `Updated successfully`,result });
+      res.status(200).json(result);
     } catch (err) {
       console.log("Error updating the cart", err);
       res.status(400).json(err);

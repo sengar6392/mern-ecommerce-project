@@ -1,51 +1,51 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createUser, loginUser } from "./authAPI";
 
-
-const initialState = {
-  value: 0,
-  status: 'idle',
-};
-
-
-export const incrementAsync = createAsyncThunk(
-  'counter/fetchCount',
-  async (amount) => {
-    
+export const createUserAsync = createAsyncThunk(
+  "user/createUser",
+  async (userData) => {
+    const data = await createUser(userData);
+    return data;
+  }
+);
+export const loginUserAsync = createAsyncThunk(
+  "user/loginUser",
+  async (loginInfo) => {
+    const res = await loginUser(loginInfo);
+    return res;
   }
 );
 
+const initialState = {
+  loggedInUser: localStorage.getItem("loggedInUser")
+    ? JSON.parse(localStorage.getItem("loggedInUser"))
+    : null,
+  status: "idle",
+};
+
 export const authSlice = createSlice({
-  name: 'counter',
+  name: "auth",
   initialState,
-  reducers: {
-    increment: (state) => {
-      state.value += 1;
-    },
-  },
 
   extraReducers: (builder) => {
     builder
-      .addCase(incrementAsync.pending, (state) => {
-        state.status = 'loading';
+      .addCase(createUserAsync.pending, (state) => {
+        state.status = "loading";
       })
-      .addCase(incrementAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.value += action.payload;
+      .addCase(createUserAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.loggedInUser = action.payload;
+      })
+      .addCase(loginUserAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(loginUserAsync.fulfilled, (state, action) => {
+        console.log("action.payload", action.payload);
+        state.status = "idle";
+        localStorage.setItem("loggedInUser", JSON.stringify(action.payload));
+        // state.loggedInUser = action.payload;
       });
   },
 });
-
-export const { increment, decrement, incrementByAmount } = authSlice.actions;
-
-
-export const selectCount = (state) => state.counter.value;
-
-
-export const incrementIfOdd = (amount) => (dispatch, getState) => {
-  const currentValue = selectCount(getState());
-  if (currentValue % 2 === 1) {
-    dispatch(incrementByAmount(amount));
-  }
-};
 
 export default authSlice.reducer;
