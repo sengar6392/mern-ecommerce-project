@@ -1,7 +1,7 @@
 const { Cart } = require("../models/cart");
 
 exports.fetchCartByUser = async (req, res) => {
-  const { user } = req.query; 
+  const { user } = req.query;
   try {
     const cartItems = await Cart.find({ user: user })
       .populate("user")
@@ -15,8 +15,8 @@ exports.fetchCartByUser = async (req, res) => {
 
 exports.addToCart = async (req, res) => {
   try {
-    const doc = await Cart.create(req.body)
-    const result=await doc.populate("product");
+    const doc = await Cart.create(req.body);
+    const result = await doc.populate("product");
     res.status(201).json(result);
   } catch (error) {
     console.log("Error in adding to cart", error);
@@ -25,25 +25,35 @@ exports.addToCart = async (req, res) => {
 };
 
 exports.deleteCart = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const result=await Cart.findByIdAndDelete(id);
-      res.status(200).json(result);
-    } catch (err) {
-      console.log("Error deleting the cart item", err);
-      res.status(400).json(err);
-    }
-  };
+  const { id } = req.params;
+  try {
+    const result = await Cart.findByIdAndDelete(id);
+    res.status(200).json(result);
+  } catch (err) {
+    console.log("Error deleting the cart item", err);
+    res.status(400).json(err);
+  }
+};
+exports.clearCartByUser = async (req, res) => {
+  const { user } = req.query;
+  try {
+    const result = await Cart.deleteMany({user:user});
+    res.status(200).json(result);
+  } catch (err) {
+    console.log("Error deleting the cart item", err);
+    res.status(400).json(err);
+  }
+};
 exports.updateCart = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const cart=await Cart.findByIdAndUpdate(id, req.body, {
-        new: true,
-      });
-      const result=await cart.populate("product")
-      res.status(200).json(result);
-    } catch (err) {
-      console.log("Error updating the cart", err);
-      res.status(400).json(err);
-    }
-  };
+  const { id } = req.params;
+  try {
+    const cart = await Cart.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    const result = await cart.populate("product");
+    res.status(200).json(result);
+  } catch (err) {
+    console.log("Error updating the cart", err);
+    res.status(400).json(err);
+  }
+};

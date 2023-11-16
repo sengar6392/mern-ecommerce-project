@@ -13,7 +13,7 @@ const Login = () => {
     watch,
     formState: { errors },
   } = useForm();
-  if(user){
+  if(user && Object.keys(user).length !== 0){
     return <Navigate to="/"></Navigate>
   }
   return (

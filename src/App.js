@@ -14,6 +14,8 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import Protected from './features/auth/components/Protected';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchItemsByUserIDAsync } from './features/cart/cartSlice';
+import PageNotFound from './pages/404';
+import OrderSuccessPage from './pages/OrderSuccessPage';
 
 const router = createBrowserRouter([
   {
@@ -40,15 +42,22 @@ const router = createBrowserRouter([
     path: "/product-detail/:id",
     element: <Protected><ProductDetailPage/></Protected>,
   },
+  {
+    path: "order-success/:id",
+    element: <OrderSuccessPage/>,
+  },
+  {
+    path: "*",
+    element: <PageNotFound/>,
+  },
 ]);
 function App() {
   const user=useSelector(state=>state.auth.loggedInUser)
-  const items=useSelector(state=>state.cart.items)
   const dispatch=useDispatch()
   useEffect(()=>{
     if(user)
     dispatch(fetchItemsByUserIDAsync(user.id))
-  },[dispatch,user,items])
+  },[dispatch,user])
   return (
     <>
        <RouterProvider router={router} />

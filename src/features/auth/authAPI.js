@@ -14,6 +14,21 @@ export async function createUser(userData) {
     console.log(error);
   }
 }
+export async function updateUser(user) {
+  try {
+    const res = await fetch(`http://localhost:8080/users/${user.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 export async function loginUser(loginInfo) {
   try {
     const res = await fetch("http://localhost:8080/auth/login", {

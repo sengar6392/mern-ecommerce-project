@@ -50,3 +50,15 @@ export async function addToCart(item) {
       console.log(error);
     }
   }
+  export async function clearCart(userID) {
+    try {
+      const res = await fetch(`http://localhost:8080/cart?user=${userID}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
