@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+
 import { Link, Navigate } from "react-router-dom";
 import Cart from "../features/cart/Cart";
 import { useForm } from "react-hook-form";
@@ -7,68 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUserAsync } from "../features/auth/authSlice";
 import { createOrderAsync } from "../features/order/orderSlice";
 
-const people = [
-  {
-    name: "Lindsay Walton",
-    email: "lindsay.walton@example.com",
-    role: "Front-end Developer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    name: "Courtney Henry",
-    email: "courtney.henry@example.com",
-    role: "Designer",
-    imageUrl:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: "3h ago",
-    lastSeenDateTime: "2023-01-23T13:23Z",
-  },
-  {
-    name: "Tom Cook",
-    email: "tom.cook@example.com",
-    role: "Director of Product",
-    imageUrl:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    lastSeen: null,
-  },
-];
 
-const products = [
-  {
-    id: 1,
-    name: "Throwback Hip Bag",
-    href: "#",
-    color: "Salmon",
-    price: "$90.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
-    imageAlt:
-      "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-  },
-  {
-    id: 2,
-    name: "Medium Stuff Satchel",
-    href: "#",
-    color: "Blue",
-    price: "$32.00",
-    quantity: 1,
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
-    imageAlt:
-      "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-  },
-  // More products...
-];
 const CheckoutPage = () => {
   const user = useSelector((state) => state.auth.loggedInUser);
   const items = useSelector((state) => state.cart.items);
   const currentOrder = useSelector((state) => state.order.currentOrder);
   const dispatch = useDispatch();
-  const [selectedAddress,setSelectedAddress]=useState()
+  const [selectedAddress,setSelectedAddress]=useState(null)
   const [paymentMethod,setPaymentMethod]=useState()
   const totalPrice = items.reduce(
     (amount, item) => item.product.price * item.quantity + amount,
@@ -76,9 +21,6 @@ const CheckoutPage = () => {
   );
   const totalItems = items.reduce((total, item) => item.quantity + total, 0);
   const handleAddress=(e)=>{
-    console.log(
-      e.target.value
-    );
     setSelectedAddress(user.addresses[e.target.value])
   }
   const handlePayment=(e)=>{
@@ -87,7 +29,7 @@ const CheckoutPage = () => {
     );
     setPaymentMethod(e.target.value)
   }
-
+  console.log(selectedAddress);
   const handleOrder=()=>{
     if (selectedAddress && paymentMethod) {
       const order = {
