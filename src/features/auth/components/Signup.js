@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { createUser } from "../authAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { createUserAsync } from "../authSlice";

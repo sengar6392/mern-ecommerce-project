@@ -14,10 +14,13 @@ exports.fetchCartByUser = async (req, res) => {
 };
 
 exports.addToCart = async (req, res) => {
+  const { user } = req.body;
   try {
     const doc = await Cart.create(req.body);
-    const result = await doc.populate("product");
-    res.status(201).json(result);
+    const cartItems = await Cart.find({ user: user })
+      .populate("user")
+      .populate("product");
+    res.status(200).json(cartItems);
   } catch (error) {
     console.log("Error in adding to cart", error);
     res.status(400).json(error);

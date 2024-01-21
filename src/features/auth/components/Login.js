@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
@@ -7,6 +7,11 @@ import { loginUserAsync } from "../authSlice";
 const Login = () => {
   const dispatch = useDispatch();
   const user=useSelector(state=>state.auth.loggedInUser)
+  useEffect(()=>{
+    if(user && Object.keys(user).length !== 0){
+      return <Navigate to="/"></Navigate>
+    }
+  },[user])
   const {
     register,
     handleSubmit,

@@ -48,6 +48,13 @@ export const cartSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+    .addCase(addToCartAsync.pending, (state) => {
+      state.status = 'loading';
+    })
+    .addCase(addToCartAsync.fulfilled, (state, action) => {
+      state.status = 'idle';
+      state.items=action.payload;
+    })
       .addCase(fetchItemsByUserIDAsync.pending, (state) => {
         state.status = 'loading';
       })

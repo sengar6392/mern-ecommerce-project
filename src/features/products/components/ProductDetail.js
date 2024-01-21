@@ -59,27 +59,27 @@ import { addToCartAsync } from "../../cart/cartSlice";
 //   details:
 //     'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
 // }
-const highlights = [
-  "Hand cut and sewn locally",
-  "Dyed with our proprietary colors",
-  "Pre-washed & pre-shrunk",
-  "Ultra-soft 100% cotton",
-];
-const colors = [
-  { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-  { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
-  { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-];
-const sizes = [
-  { name: "XXS", inStock: false },
-  { name: "XS", inStock: true },
-  { name: "S", inStock: true },
-  { name: "M", inStock: true },
-  { name: "L", inStock: true },
-  { name: "XL", inStock: true },
-  { name: "2XL", inStock: true },
-  { name: "3XL", inStock: true },
-];
+// const highlights = [
+//   "Hand cut and sewn locally",
+//   "Dyed with our proprietary colors",
+//   "Pre-washed & pre-shrunk",
+//   "Ultra-soft 100% cotton",
+// ];
+// const colors = [
+//   { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
+//   { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
+//   { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
+// ];
+// const sizes = [
+//   { name: "XXS", inStock: false },
+//   { name: "XS", inStock: true },
+//   { name: "S", inStock: true },
+//   { name: "M", inStock: true },
+//   { name: "L", inStock: true },
+//   { name: "XL", inStock: true },
+//   { name: "2XL", inStock: true },
+//   { name: "3XL", inStock: true },
+// ];
 // const reviews = { href: '#', average: 4, totalCount: 117 }
 
 function classNames(...classes) {
@@ -92,13 +92,28 @@ export default function ProductDetail() {
   const product = useSelector((state) => state.product.selectedProduct);
   const status = useSelector((state) => state.product.status);
   const user = useSelector((state) => state.auth.loggedInUser);
-  console.log("user", user);
-  console.log("product", product);
-  const [selectedColor, setSelectedColor] = useState(colors[0]);
-  const [selectedSize, setSelectedSize] = useState(sizes[2]);
+  // const [selectedColor, setSelectedColor] = useState(colors[0]);
+  // const [selectedSize, setSelectedSize] = useState(sizes[2]);
+
   useEffect(() => {
     dispatch(fetchProductByIdAsync(params.id));
   }, []);
+
+  const handleAddToCart = (e) => {
+    if(user){
+      e.preventDefault();
+      dispatch(
+        addToCartAsync({
+          quantity: 1,
+          product: product.id,
+          user: user.id,
+        })
+      );
+    }
+    else{
+      alert("Login first")
+    }
+  };
   if (product)
     return (
       <div className="bg-white">
@@ -217,7 +232,7 @@ export default function ProductDetail() {
 
                 <form className="mt-10">
                   {/* Colors */}
-                  <div>
+                  {/* <div>
                     <h3 className="text-sm font-medium text-gray-900">Color</h3>
 
                     <RadioGroup
@@ -256,10 +271,10 @@ export default function ProductDetail() {
                         ))}
                       </div>
                     </RadioGroup>
-                  </div>
+                  </div> */}
 
                   {/* Sizes */}
-                  <div className="mt-10">
+                  {/* <div className="mt-10">
                     <div className="flex items-center justify-between">
                       <h3 className="text-sm font-medium text-gray-900">
                         Size
@@ -339,19 +354,10 @@ export default function ProductDetail() {
                         ))}
                       </div>
                     </RadioGroup>
-                  </div>
+                  </div> */}
 
                   <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      dispatch(
-                        addToCartAsync({
-                          quantity: 1,
-                          product: product.id,
-                          user: user.id,
-                        })
-                      );
-                    }}
+                    onClick={handleAddToCart}
                     className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     Add to Cart
@@ -371,7 +377,7 @@ export default function ProductDetail() {
                   </div>
                 </div>
 
-                <div className="mt-10">
+                {/* <div className="mt-10">
                   <h3 className="text-sm font-medium text-gray-900">
                     Highlights
                   </h3>
@@ -388,13 +394,14 @@ export default function ProductDetail() {
                       ))}
                     </ul>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="mt-10">
                   <h2 className="text-sm font-medium text-gray-900">Details</h2>
 
                   <div className="mt-4 space-y-6">
                     <p className="text-sm text-gray-600">{product.details}</p>
+                    <p>Brand: {product.brand}</p>
                   </div>
                 </div>
               </div>
@@ -403,4 +410,7 @@ export default function ProductDetail() {
         )}
       </div>
     );
+  else {
+    return <div>Loading....</div>;
+  }
 }

@@ -12,13 +12,12 @@ export async function fetchAllProducts(filter, sort, pagination) {
   for (let key in pagination) {
     queryString += `${key}=${pagination[key]}&`;
   }
-  console.log("queryString", queryString);
   try {
     const res = await fetch(`http://localhost:8080/products?${queryString}`);
     const products = await res.json();
     const totalProducts = await res.headers.get("x-total-count");
 
-    return {products,totalProducts};
+    return { products, totalProducts };
   } catch (error) {
     console.log(error);
   }

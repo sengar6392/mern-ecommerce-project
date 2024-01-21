@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createUser, loginUser, updateUser } from "./authAPI";
-
 export const createUserAsync = createAsyncThunk(
   "user/createUser",
   async (userData) => {
@@ -58,6 +57,7 @@ export const authSlice = createSlice({
         console.log("action.payload", action.payload);
         state.status = "idle";
         localStorage.setItem("loggedInUser", JSON.stringify(action.payload));
+        state.loggedInUser=action.payload
         // state.loggedInUser = action.payload;
       });
   },
