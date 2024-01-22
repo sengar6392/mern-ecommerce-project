@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Navigate } from "react-router-dom";
+import { Link, NavLink, Navigate } from "react-router-dom";
 import { loginUserAsync } from "../authSlice";
 
 const Login = () => {
@@ -74,12 +74,12 @@ const Login = () => {
                   Password
                 </label>
                 <div className="text-sm">
-                  <a
-                    href="#"
+                  <NavLink
+                    to="/forgot-password"
                     className="font-semibold text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot password?
-                  </a>
+                  </NavLink>
                 </div>
               </div>
               <div className="mt-2">

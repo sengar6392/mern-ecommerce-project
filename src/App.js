@@ -19,6 +19,7 @@ import OrderSuccessPage from './pages/OrderSuccessPage';
 import UserOrders from './features/order/components/UserOrder';
 import UserOrderPage from './pages/UserOrderPage';
 import UserProfilePage from './pages/UserProfilePage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <UserProfilePage/>,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPasswordPage/>,
   },
   {
     path: "*",
