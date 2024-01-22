@@ -18,6 +18,7 @@ import PageNotFound from './pages/404';
 import OrderSuccessPage from './pages/OrderSuccessPage';
 import UserOrders from './features/order/components/UserOrder';
 import UserOrderPage from './pages/UserOrderPage';
+import UserProfilePage from './pages/UserProfilePage';
 
 const router = createBrowserRouter([
   {
@@ -49,8 +50,12 @@ const router = createBrowserRouter([
     element: <Protected><UserOrderPage/></Protected>,
   },
   {
-    path: "order-success/:id",
+    path: "/order-success/:id",
     element: <OrderSuccessPage/>,
+  },
+  {
+    path: "/profile",
+    element: <UserProfilePage/>,
   },
   {
     path: "*",

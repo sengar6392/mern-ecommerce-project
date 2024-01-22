@@ -82,7 +82,7 @@ export default function UserOrders() {
                     <p>$ {order.totalPrice}</p>
                   </div>
                   <div className="flex justify-between my-2 text-base font-medium text-gray-900">
-                    <p>Total Items in Cart</p>
+                    <p>Total Items</p>
                     <p>{order.totalItems} items</p>
                   </div>
                   <p className="mt-0.5 text-sm text-gray-500">

@@ -1,5 +1,5 @@
 const express = require("express");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const productRouter = require("./routes/product");
 const categoryRouter = require("./routes/category");
 const brandRouter = require("./routes/brand");
