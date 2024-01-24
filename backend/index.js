@@ -1,28 +1,39 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const productRouter = require("./routes/product");
-const categoryRouter = require("./routes/category");
-const brandRouter = require("./routes/brand");
-const {userRouter} = require("./routes/user");
-const {authRouter}  = require("./routes/auth");
-const cors = require("cors");
-const { cartRouter } = require("./routes/cart");
-const { orderRouter } = require("./routes/order");
+
+import express from "express"
+import mongoose from "mongoose"
+import cors from "cors"
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+// Import routes
+import productRouter from "./routes/product.js"
+import categoryRouter from "./routes/category.js"
+import brandRouter from "./routes/brand.js"
+import userRouter from "./routes/user.js"
+import cartRouter from "./routes/cart.js"
+import orderRouter from "./routes/order.js"
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js"
 
 const server = express();
+dotenv.config()
 
 server.use(cors({
  exposedHeaders:['X-Total-Count']
 }));
-
+server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
+server.use(cookieParser());
+
+// Routes
 server.use("/products", productRouter);
 server.use("/categories", categoryRouter);
 server.use("/brands", brandRouter);
 server.use("/users", userRouter);
-server.use("/auth", authRouter)
 server.use("/cart", cartRouter)
 server.use("/orders", orderRouter)
+
+// Error handling middlewares
+server.use(notFound)
+server.use(errorHandler)
 main().catch((err) => console.log(err));
 async function main() {
   // connection to local database

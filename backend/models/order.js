@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const {Schema} = mongoose;
 
 
@@ -23,5 +23,5 @@ orderSchema.set('toJSON',{
     transform: function (doc,ret) { delete ret._id}
 })
 
-
-exports.Order = mongoose.model('Order',orderSchema)
+const Order = mongoose.model('Order',orderSchema)
+export default Order

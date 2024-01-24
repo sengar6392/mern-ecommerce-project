@@ -1,6 +1,6 @@
-const { Category } = require("../models/category")
+import Category from "../models/category.js"
 
-exports.fetchCategories=async(req,res)=>{
+export const fetchCategories=async(req,res)=>{
     try {
         const categories=await Category.find({})
         res.status(200).json(categories)
@@ -12,7 +12,7 @@ exports.fetchCategories=async(req,res)=>{
 
 }
 
-exports.createCategory=async(req,res)=>{
+export const createCategory=async(req,res)=>{
     try {
         const category=await Category.create(req.body)
         res.status(201).json(category)

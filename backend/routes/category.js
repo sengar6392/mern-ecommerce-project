@@ -1,8 +1,8 @@
-const express=require("express")
-const { fetchCategories, createCategory } = require("../controllers/category")
+import express from "express"
+import { fetchCategories, createCategory } from "../controllers/category.js"
 
 const router=express.Router()
 
 router.route("/").get(fetchCategories).post(createCategory)
 
-module.exports=router
+export default router

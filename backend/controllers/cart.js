@@ -1,6 +1,6 @@
-const { Cart } = require("../models/cart");
+import Cart from "../models/cart.js"
 
-exports.fetchCartByUser = async (req, res) => {
+export const fetchCartByUser = async (req, res) => {
   const { user } = req.query;
   try {
     const cartItems = await Cart.find({ user: user })
@@ -13,7 +13,7 @@ exports.fetchCartByUser = async (req, res) => {
   }
 };
 
-exports.addToCart = async (req, res) => {
+export const addToCart = async (req, res) => {
   const { user } = req.body;
   try {
     const doc = await Cart.create(req.body);
@@ -27,7 +27,7 @@ exports.addToCart = async (req, res) => {
   }
 };
 
-exports.deleteCart = async (req, res) => {
+export const deleteCart = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await Cart.findByIdAndDelete(id);
@@ -37,7 +37,7 @@ exports.deleteCart = async (req, res) => {
     res.status(400).json(err);
   }
 };
-exports.clearCartByUser = async (req, res) => {
+export const clearCartByUser = async (req, res) => {
   const { user } = req.query;
   try {
     const result = await Cart.deleteMany({user:user});
@@ -47,7 +47,7 @@ exports.clearCartByUser = async (req, res) => {
     res.status(400).json(err);
   }
 };
-exports.updateCart = async (req, res) => {
+export const updateCart = async (req, res) => {
   const { id } = req.params;
   try {
     const cart = await Cart.findByIdAndUpdate(id, req.body, {

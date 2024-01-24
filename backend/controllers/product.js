@@ -1,6 +1,6 @@
-const { Product } = require("../models/product");
+import Product from "../models/product.js"
 
-exports.createProduct = async (req, res) => {
+export const createProduct = async (req, res) => {
   try {
     const product = await Product.create(req.body);
     res.status(201).json({ message: "Successfully created", data: product });
@@ -9,7 +9,7 @@ exports.createProduct = async (req, res) => {
     res.status(400).send({ message: "Failed to create product. " + error });
   }
 };
-exports.fetchAllProducts = async (req, res) => {
+export const fetchAllProducts = async (req, res) => {
   let condition = {};
   if (!req.query.admin) {
     condition.deleted = { $ne: true };
@@ -50,7 +50,7 @@ exports.fetchAllProducts = async (req, res) => {
   }
 };
 
-exports.fetchProductById = async (req, res) => {
+export const fetchProductById = async (req, res) => {
   const { id } = req.params;
   try {
     const product = await Product.findById(id);
@@ -61,7 +61,7 @@ exports.fetchProductById = async (req, res) => {
   }
 };
 
-exports.updateProduct = async (req, res) => {
+export const updateProduct = async (req, res) => {
   const { id } = req.params;
   try {
     const product = await Product.findByIdAndUpdate(id, req.body, {

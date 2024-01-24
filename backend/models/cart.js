@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const {Schema} = mongoose;
 
 
@@ -20,5 +20,5 @@ cartSchema.set('toJSON',{
     transform: function (doc,ret) { delete ret._id}
 })
 
-
-exports.Cart = mongoose.model('Cart',cartSchema)
+const Cart=mongoose.model('Cart',cartSchema)
+export default Cart

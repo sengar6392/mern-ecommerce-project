@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const categorySchema = new Schema({
@@ -16,5 +16,5 @@ const categorySchema = new Schema({
 //     delete ret._id;
 //   },
 // });
-
-exports.Category = mongoose.model("Category", categorySchema);
+const Category=mongoose.model("Category", categorySchema);
+export default Category

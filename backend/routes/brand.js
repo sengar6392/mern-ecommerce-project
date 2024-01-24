@@ -1,8 +1,8 @@
-const express=require("express")
-const { fetchBrands, createBrand } = require("../controllers/brand")
+import express from "express"
+import { fetchBrands, createBrand } from "../controllers/brand.js"
 
 const router=express.Router()
 
 router.route("/").get(fetchBrands).post(createBrand)
 
-module.exports=router
+export default router

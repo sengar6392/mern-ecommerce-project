@@ -1,8 +1,19 @@
-const express=require("express")
-const { fetchUserById, updateUser } = require("../controllers/user")
+import express from "express"
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+  getUserProfile,
+  updateUserProfile,
+} from "../controllers/user.js"
+import { protect } from "../middleware/authMiddleware.js"
 
-const router=express.Router()
+const router = express.Router();
 
-router.route("/:id").get(fetchUserById).patch(updateUser)
+router.post("/", registerUser);
+router.post("/auth", loginUser);
+router.post("/logout", logoutUser);
 
-exports.userRouter=router
+router.route("/profile").get(protect,getUserProfile).put(protect,updateUserProfile);
+
+export default router

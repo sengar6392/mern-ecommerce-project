@@ -1,6 +1,6 @@
-const { Brand } = require("../models/brand");
+import Brand from "../models/brand.js"
 
-exports.fetchBrands=async(req,res)=>{
+export const fetchBrands=async(req,res)=>{
     try {
         const brands=await Brand.find({})
         res.status(200).json(brands)
@@ -12,7 +12,7 @@ exports.fetchBrands=async(req,res)=>{
 
 }
 
-exports.createBrand=async(req,res)=>{
+export const createBrand=async(req,res)=>{
     try {
         const brand=await Brand.create(req.body)
         res.status(201).json(brand)

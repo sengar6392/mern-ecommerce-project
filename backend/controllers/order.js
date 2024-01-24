@@ -1,7 +1,7 @@
-const { Cart } = require("../models/cart");
-const { Order } = require("../models/order");
+import Cart from "../models/cart.js"
+import Order from "../models/order.js"
 
-exports.fetchOrderByUser = async (req, res) => {
+export const fetchOrderByUser = async (req, res) => {
   const { userId } = req.params; 
   try {
     const orders = await Order.find({ user: userId })
@@ -12,7 +12,7 @@ exports.fetchOrderByUser = async (req, res) => {
   }
 };
 
-exports.createOrder = async (req, res) => {
+export const createOrder = async (req, res) => {
   try {
     const doc = await Order.create(req.body)
     res.status(201).json(doc);
@@ -22,7 +22,7 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-exports.deleteOrder = async (req, res) => {
+export const deleteOrder = async (req, res) => {
     const { id } = req.params;
     try {
       await Order.findByIdAndDelete(id);
@@ -32,7 +32,7 @@ exports.deleteOrder = async (req, res) => {
       res.status(400).json(err);
     }
   };
-exports.updateOrder = async (req, res) => {
+export const updateOrder = async (req, res) => {
     const { id } = req.params;
     try {
       const order=await Cart.findByIdAndUpdate(id, req.body, {
@@ -45,7 +45,7 @@ exports.updateOrder = async (req, res) => {
     }
   };
 
-  exports.fetchAllOrders = async (req, res) => {
+  export const fetchAllOrders = async (req, res) => {
     let query = Order.find({deleted:{$ne:true}});
 
     if (req.query._page && req.query._limit) {

@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const brandSchema = new Schema({
@@ -16,5 +16,5 @@ const brandSchema = new Schema({
 //     delete ret._id;
 //   },
 // });
-
-exports.Brand = mongoose.model("Brand", brandSchema);
+const Brand = mongoose.model("Brand", brandSchema);
+export default Brand;
