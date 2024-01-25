@@ -68,12 +68,12 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
-  const user=useSelector(state=>state.auth.loggedInUser)
+  const {userInfo}=useSelector(state=>state.auth)
   const dispatch=useDispatch()
   useEffect(()=>{
-    if(user)
-    dispatch(fetchItemsByUserIDAsync(user.id))
-  },[dispatch,user])
+    if(userInfo)
+    dispatch(fetchItemsByUserIDAsync())
+  },[dispatch,userInfo])
   return (
     <>
        <RouterProvider router={router} />

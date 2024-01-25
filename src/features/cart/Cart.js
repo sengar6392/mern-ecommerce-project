@@ -67,7 +67,7 @@ const Cart = ({cartPage, checkoutPage,handleOrder}) => {
                       >
                         Qty
                       </label>
-                      <select id="qty" onChange={(e) => handleQuanity(e, item)}>
+                      <select id="qty" value={item.quantity} onChange={(e) => handleQuanity(e, item)}>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>

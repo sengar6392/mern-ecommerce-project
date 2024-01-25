@@ -1,10 +1,9 @@
 import Cart from "../models/cart.js"
 
 export const fetchCartByUser = async (req, res) => {
-  const { user } = req.query;
+  const id = req.user._id;
   try {
-    const cartItems = await Cart.find({ user: user })
-      .populate("user")
+    const cartItems = await Cart.find({ user: id })
       .populate("product");
     res.status(200).json(cartItems);
   } catch (error) {
@@ -14,11 +13,10 @@ export const fetchCartByUser = async (req, res) => {
 };
 
 export const addToCart = async (req, res) => {
-  const { user } = req.body;
+  const id =req.user._id
   try {
-    const doc = await Cart.create(req.body);
-    const cartItems = await Cart.find({ user: user })
-      .populate("user")
+    const doc = await Cart.create({...req.body,user:id});
+    const cartItems = await Cart.find({ user: id })
       .populate("product");
     res.status(200).json(cartItems);
   } catch (error) {
@@ -28,7 +26,7 @@ export const addToCart = async (req, res) => {
 };
 
 export const deleteCart = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.query;
   try {
     const result = await Cart.findByIdAndDelete(id);
     res.status(200).json(result);
@@ -38,9 +36,9 @@ export const deleteCart = async (req, res) => {
   }
 };
 export const clearCartByUser = async (req, res) => {
-  const { user } = req.query;
+  const id = req.user._id;
   try {
-    const result = await Cart.deleteMany({user:user});
+    const result = await Cart.deleteMany({user:id});
     res.status(200).json(result);
   } catch (err) {
     console.log("Error deleting the cart item", err);
@@ -48,7 +46,8 @@ export const clearCartByUser = async (req, res) => {
   }
 };
 export const updateCart = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.query;
+  console.log(req.query);
   try {
     const cart = await Cart.findByIdAndUpdate(id, req.body, {
       new: true,

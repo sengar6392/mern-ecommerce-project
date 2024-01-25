@@ -26,7 +26,7 @@ export const logoutUserAsync = createAsyncThunk("user/logoutUser", async () => {
   const res = await logoutUser();
   return res;
 });
-console.log(JSON.parse(localStorage.getItem("userInfo")));
+
 const initialState = {
   userInfo: localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
@@ -68,11 +68,9 @@ export const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(updateUserAsync.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload);
         state.status = "idle";
         localStorage.setItem("userInfo", JSON.stringify(action.payload));
         state.userInfo = action.payload;
-        // state.userInfo = action.payload;
       });
   },
 });

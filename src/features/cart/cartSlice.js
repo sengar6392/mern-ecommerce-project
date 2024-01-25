@@ -13,8 +13,8 @@ export const addToCartAsync=createAsyncThunk(
   }
 )
 export const fetchItemsByUserIDAsync=createAsyncThunk(
-  'cart/fetchItemsByUserIDAsync',async (userID)=>{
-    const res=await fetchItemsByUserID(userID)
+  'cart/fetchItemsByUserIDAsync',async ()=>{
+    const res=await fetchItemsByUserID()
     return res
   }
 )
@@ -25,8 +25,8 @@ export const updateCartItemAsync=createAsyncThunk(
   }
 )
 export const deleteCartItemAsync=createAsyncThunk(
-  'cart/deleteCartItemAsync',async (itemID)=>{
-    const res=await deleteCartItem(itemID)
+  'cart/deleteCartItemAsync',async (itemId)=>{
+    const res=await deleteCartItem(itemId)
     return res
   }
 )

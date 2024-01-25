@@ -91,7 +91,7 @@ export default function ProductDetail() {
   const dispatch = useDispatch();
   const product = useSelector((state) => state.product.selectedProduct);
   const status = useSelector((state) => state.product.status);
-  const user = useSelector((state) => state.auth.loggedInUser);
+  const {userInfo} = useSelector((state) => state.auth);
   // const [selectedColor, setSelectedColor] = useState(colors[0]);
   // const [selectedSize, setSelectedSize] = useState(sizes[2]);
 
@@ -100,13 +100,12 @@ export default function ProductDetail() {
   }, []);
 
   const handleAddToCart = (e) => {
-    if(user){
+    if(userInfo){
       e.preventDefault();
       dispatch(
         addToCartAsync({
           quantity: 1,
-          product: product.id,
-          user: user.id,
+          product: product.id
         })
       );
     }
