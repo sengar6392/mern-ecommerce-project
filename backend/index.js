@@ -17,7 +17,9 @@ const server = express();
 dotenv.config()
 
 server.use(cors({
- exposedHeaders:['X-Total-Count']
+ exposedHeaders:['X-Total-Count'],
+ origin:'http://localhost:3000',
+ credentials:true
 }));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());

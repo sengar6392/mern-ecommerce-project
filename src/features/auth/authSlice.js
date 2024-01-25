@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUser, loginUser, updateUser } from "./authAPI";
-export const createUserAsync = createAsyncThunk(
+import { updateUser, loginUser, registerUser, logoutUser } from "./authAPI";
+
+export const registerUserAsync = createAsyncThunk(
   "user/createUser",
   async (userData) => {
-    const data = await createUser(userData);
+    const data = await registerUser(userData);
     return data;
   }
 );
@@ -21,10 +22,14 @@ export const loginUserAsync = createAsyncThunk(
     return res;
   }
 );
-
+export const logoutUserAsync = createAsyncThunk("user/logoutUser", async () => {
+  const res = await logoutUser();
+  return res;
+});
+console.log(JSON.parse(localStorage.getItem("userInfo")));
 const initialState = {
-  loggedInUser: localStorage.getItem("loggedInUser")
-    ? JSON.parse(localStorage.getItem("loggedInUser"))
+  userInfo: localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo"))
     : null,
   status: "idle",
 };
@@ -35,20 +40,29 @@ export const authSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(createUserAsync.pending, (state) => {
+      .addCase(registerUserAsync.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(createUserAsync.fulfilled, (state, action) => {
+      .addCase(registerUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.loggedInUser = action.payload;
+        state.userInfo = action.payload;
+        localStorage.setItem("userInfo", JSON.stringify(action.payload));
       })
       .addCase(loginUserAsync.pending, (state) => {
         state.status = "loading";
       })
       .addCase(loginUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        localStorage.setItem("loggedInUser", JSON.stringify(action.payload));
-        // state.loggedInUser = action.payload;
+        state.userInfo = action.payload;
+        localStorage.setItem("userInfo", JSON.stringify(action.payload));
+      })
+      .addCase(logoutUserAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(logoutUserAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.userInfo = null;
+        localStorage.removeItem("userInfo");
       })
       .addCase(updateUserAsync.pending, (state) => {
         state.status = "loading";
@@ -56,9 +70,9 @@ export const authSlice = createSlice({
       .addCase(updateUserAsync.fulfilled, (state, action) => {
         console.log("action.payload", action.payload);
         state.status = "idle";
-        localStorage.setItem("loggedInUser", JSON.stringify(action.payload));
-        state.loggedInUser=action.payload
-        // state.loggedInUser = action.payload;
+        localStorage.setItem("userInfo", JSON.stringify(action.payload));
+        state.userInfo = action.payload;
+        // state.userInfo = action.payload;
       });
   },
 });

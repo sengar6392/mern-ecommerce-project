@@ -1,26 +1,27 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink, Navigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { loginUserAsync } from "../authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const user=useSelector(state=>state.auth.loggedInUser)
+  const {userInfo}=useSelector(state=>state.auth)
+  const navigate=useNavigate()
+
   useEffect(()=>{
-    if(user && Object.keys(user).length !== 0){
-      return <Navigate to="/"></Navigate>
+    if(userInfo){
+      return navigate('/')
     }
-  },[user])
+  },[userInfo,navigate])
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-  if(user && Object.keys(user).length !== 0){
-    return <Navigate to="/"></Navigate>
-  }
+  
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

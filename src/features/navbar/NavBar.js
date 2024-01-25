@@ -6,7 +6,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Link, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUserAsync } from "../auth/authSlice";
 
 const user = {
   name: "Tom Cook",
@@ -18,7 +19,6 @@ const navigation = [
   { name: "Products", to: "/", current: true },
   { name: "LogIn", to: "/login", current: false },
   { name: "SignUp", to: "/signup", current: false },
-  
 ];
 const userNavigation = [
   { name: "My Profile", link: "/profile" },
@@ -31,7 +31,8 @@ function classNames(...classes) {
 }
 
 const NavBar = ({ children }) => {
-  const items=useSelector(state=>state.cart.items)
+  const dispatch=useDispatch()
+  const items = useSelector((state) => state.cart.items);
   return (
     <>
       <div className="min-h-full">
@@ -42,7 +43,7 @@ const NavBar = ({ children }) => {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Link to='/'>
+                      <Link to="/">
                         <img
                           className="h-8 w-8"
                           src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
@@ -67,6 +68,12 @@ const NavBar = ({ children }) => {
                             {item.name}
                           </NavLink>
                         ))}
+                        <div
+                          onClick={()=>dispatch(logoutUserAsync())}
+                          className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                        >
+                          Sign Out
+                        </div>
                       </div>
                     </div>
                   </div>
