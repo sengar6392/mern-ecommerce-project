@@ -2,7 +2,7 @@ import Cart from "../models/cart.js"
 import Order from "../models/order.js"
 
 export const fetchOrderByUser = async (req, res) => {
-  const { userId } = req.params; 
+  const userId  = req.user._id; 
   try {
     const orders = await Order.find({ user: userId })
     res.status(200).json(orders);
@@ -13,8 +13,9 @@ export const fetchOrderByUser = async (req, res) => {
 };
 
 export const createOrder = async (req, res) => {
+  const id=req.user._id
   try {
-    const doc = await Order.create(req.body)
+    const doc = await Order.create({...req.body,user:id})
     res.status(201).json(doc);
   } catch (error) {
     console.log("Error in creating order", error);

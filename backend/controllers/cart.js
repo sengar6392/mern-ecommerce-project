@@ -47,7 +47,6 @@ export const clearCartByUser = async (req, res) => {
 };
 export const updateCart = async (req, res) => {
   const { id } = req.query;
-  console.log(req.query);
   try {
     const cart = await Cart.findByIdAndUpdate(id, req.body, {
       new: true,

@@ -4,6 +4,6 @@ import { protect } from "../middleware/authMiddleware.js"
 
 const router=express.Router()
 router.use(protect)
-router.route("/").get(fetchCartByUser).post(addToCart).delete(deleteCart).put(updateCart)
+router.route("/").get(fetchCartByUser).post(addToCart).delete(deleteCart).patch(updateCart)
 router.route("/clear").delete(clearCartByUser)
 export default router

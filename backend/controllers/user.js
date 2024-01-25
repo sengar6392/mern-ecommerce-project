@@ -14,6 +14,8 @@ const loginUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      addresses:user.addresses,
+      role:user.role
     });
   } else {
     res.status(401);
@@ -45,6 +47,8 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      addresses:user.addresses,
+      role:user.role
     });
   } else {
     res.status(400);
@@ -70,6 +74,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      addresses:user.addresses,
+      role:user.role
     });
   } else {
     res.status(404);
@@ -83,7 +89,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-
+    user.addresses=req.body.addresses || user.addresses
     if (req.body.password) {
       user.password = req.body.password;
     }
@@ -94,6 +100,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      addresses:updatedUser.addresses,
+      role:updatedUser.role
     });
   } else {
     res.status(404);

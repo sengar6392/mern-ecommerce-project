@@ -1,10 +1,10 @@
 import express from "express"
 import { fetchOrderByUser, createOrder, deleteOrder, updateOrder, fetchAllOrders } from "../controllers/order.js"
+import { protect } from "../middleware/authMiddleware.js"
 
 const router=express.Router()
-
-router.route("/").get(fetchAllOrders).post(createOrder)
+router.use(protect)
+router.route("/").get(fetchOrderByUser).post(createOrder)
 router.route("/:id").delete(deleteOrder).patch(updateOrder)
-router.route("/user/:userId").get(fetchOrderByUser)
 
 export default router

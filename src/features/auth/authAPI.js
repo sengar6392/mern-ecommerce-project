@@ -21,8 +21,8 @@ export async function registerUser(userData) {
 }
 export async function updateUser(user) {
   try {
-    const res = await fetch(`http://localhost:8080/users/${user.id}`, {
-      method: "PATCH",
+    const res = await fetch(`${baseUrl}/users/profile`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -46,7 +46,6 @@ export async function loginUser(loginInfo) {
       body: JSON.stringify(loginInfo),
     });
     const data=await res.json()
-    console.log('login user data',data);
     return data
   } catch (error) {
     console.log(error);

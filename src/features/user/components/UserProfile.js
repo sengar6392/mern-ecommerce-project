@@ -5,11 +5,7 @@ import { useForm } from 'react-hook-form'
 
 const UserProfile = () => {
     const dispatch=useDispatch()
-    const user=useSelector((state)=>state.auth.loggedInUser)
-    const userInfo=useSelector((state)=>state.user.userInfo)
-    useEffect(()=>{
-        dispatch(fetchLoggedInUserAsync(user.id))
-    },[])
+    const userInfo=useSelector((state)=>state.auth.userInfo)
     const [selectedEditIndex, setSelectedEditIndex] = useState(-1);
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
 
@@ -51,7 +47,8 @@ const UserProfile = () => {
     dispatch(updateUserAsync(newUser));
     setShowAddAddressForm(false);
   };
-  if(userInfo)
+
+
   return (
     <div>
       <div className="mx-auto mt-12 bg-white max-w-7xl px-4 sm:px-6 lg:px-8">

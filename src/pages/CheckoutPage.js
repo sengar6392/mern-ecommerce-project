@@ -1,54 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cart from "../features/cart/Cart";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserAsync } from "../features/auth/authSlice";
 import { createOrderAsync } from "../features/order/orderSlice";
 
-
 const CheckoutPage = () => {
-  const user = useSelector((state) => state.auth.loggedInUser);
+  const { userInfo } = useSelector((state) => state.auth);
   const items = useSelector((state) => state.cart.items);
   const currentOrder = useSelector((state) => state.order.currentOrder);
   const dispatch = useDispatch();
-  const [selectedAddress,setSelectedAddress]=useState(null)
-  const [paymentMethod,setPaymentMethod]=useState()
+  const navigate = useNavigate();
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState();
   const totalPrice = items.reduce(
     (amount, item) => item.product.price * item.quantity + amount,
     0
   );
   const totalItems = items.reduce((total, item) => item.quantity + total, 0);
-  const handleAddress=(e)=>{
-    setSelectedAddress(user.addresses[e.target.value])
-  }
-  const handlePayment=(e)=>{
-    console.log(
-      e.target.value
-    );
-    setPaymentMethod(e.target.value)
-  }
-  console.log(selectedAddress);
-  const handleOrder=()=>{
-    if (selectedAddress && paymentMethod) {
+  const handleAddress = (e) => {
+    setSelectedAddress(userInfo.addresses[e.target.value]);
+  };
+  const handlePayment = (e) => {
+    setPaymentMethod(e.target.value);
+  };
+
+  const handleOrder = () => {
+    if (!selectedAddress) {
+      alert("Please select an address");
+    } else if (!paymentMethod) {
+      alert("Select a payment method");
+    } else if (!items.length) {
+      alert("No items in cart");
+    } else {
       const order = {
         items,
         totalPrice,
         totalItems,
-        user: user.id,
+        user: userInfo.id,
         paymentMethod,
         selectedAddress,
-        status: 'pending', // other status can be delivered, received.
+        status: "pending", // other status can be delivered, received.
       };
       dispatch(createOrderAsync(order));
-      // need to redirect from here to a new page of order success.
-    } else {
-      
-      alert('Select Address and Payment method');
     }
-  }
+  };
 
+  useEffect(() => {
+    if (currentOrder) {
+      navigate(`/order-success/${currentOrder.id}`);
+    }
+  }, [currentOrder, navigate]);
   const {
     register,
     handleSubmit,
@@ -57,14 +61,16 @@ const CheckoutPage = () => {
   } = useForm();
   return (
     <>
-    {currentOrder && <Navigate to={`/order-success/${currentOrder.id}`} replace={true}></Navigate>}
       <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3 mx-2 sm:mx-8 mt-8">
         <form
           className="col-span-3 sm:col-span-2  bg-white px-6 py-4"
           onSubmit={handleSubmit((data) => {
             console.log("data", data);
             dispatch(
-              updateUserAsync({ ...user, addresses: [...user.addresses, data] })
+              updateUserAsync({
+                ...userInfo,
+                addresses: [...userInfo.addresses, data],
+              })
             );
           })}
         >
@@ -246,10 +252,12 @@ const CheckoutPage = () => {
                 Your Addresses
               </legend>
               <p className="mt-1 text-sm leading-6 text-gray-600">
-                Choose from existing addresses
+                {userInfo.addresses.length !== 0
+                  ? "Choose from existing addresses"
+                  : "No address added"}
               </p>
               <ul>
-                {user.addresses.map((address, index) => (
+                {userInfo.addresses.map((address, index) => (
                   <li
                     key={index}
                     className="flex justify-between gap-x-6 px-5 py-5 border-solid border-2"
@@ -268,8 +276,11 @@ const CheckoutPage = () => {
                           <span className="text-sm font-semibold leading-6 text-gray-900">
                             {address.name}
                           </span>
-                          , <span className="text-sm leading-6 text-gray-900">{address.street}, {address.city}, {address.state},{" "}
-                          {address.pinCode},{address.country}</span> 
+                          ,{" "}
+                          <span className="text-sm leading-6 text-gray-900">
+                            {address.street}, {address.city}, {address.state},{" "}
+                            {address.pinCode},{address.country}
+                          </span>
                         </p>
                       </div>
                     </div>
@@ -323,7 +334,7 @@ const CheckoutPage = () => {
           </div>
         </form>
         <div className="bg-white mb-auto col-span-3 sm:col-span-1">
-          <Cart checkoutPage  handleOrder={handleOrder}/>
+          <Cart checkoutPage handleOrder={handleOrder} />
         </div>
       </div>
     </>

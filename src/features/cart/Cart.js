@@ -22,11 +22,6 @@ const Cart = ({cartPage, checkoutPage,handleOrder}) => {
   const handleRemove = (id) => {
     dispatch(deleteCartItemAsync(id));
   };
-  if(!items.length && checkoutPage && status==="idle"){
-    return (
-      <Navigate to="/" replace={true}></Navigate>
-    )
-  }
   return (
     <>
       {/* <div className="bg-white mx-auto sm:mx-20 lg:mx-60 max-w-7xl px-4 py-6 sm:px-6 lg:px-8 mt-8"> */}

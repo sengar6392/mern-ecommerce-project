@@ -6,7 +6,7 @@ const UserOrderPage = () => {
   return (
     <>
     <NavBar>
-        <div className=" text-xl font-semibold">My Orders</div>
+        
         <UserOrders/>
      </NavBar>
     </>

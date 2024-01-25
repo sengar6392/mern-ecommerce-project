@@ -31,8 +31,8 @@ export const deleteCartItemAsync=createAsyncThunk(
   }
 )
 export const clearCartAsync=createAsyncThunk(
-  'cart/clearCartAsync',async (userID)=>{
-    const res=await clearCart(userID)
+  'cart/clearCartAsync',async ()=>{
+    const res=await clearCart()
     return res
   }
 )
