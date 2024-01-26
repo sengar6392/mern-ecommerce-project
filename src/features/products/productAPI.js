@@ -1,3 +1,6 @@
+import { config } from "../../config/api";
+const {baseUrl}=config
+
 export async function fetchAllProducts(filter, sort, pagination) {
   let queryString = "";
   for (let key in filter) {
@@ -13,7 +16,7 @@ export async function fetchAllProducts(filter, sort, pagination) {
     queryString += `${key}=${pagination[key]}&`;
   }
   try {
-    const res = await fetch(`http://localhost:8080/products?${queryString}`);
+    const res = await fetch(`${baseUrl}/products?${queryString}`);
     const products = await res.json();
     const totalProducts = await res.headers.get("x-total-count");
 
@@ -24,7 +27,7 @@ export async function fetchAllProducts(filter, sort, pagination) {
 }
 export async function fetchProductById(id) {
   try {
-    const res = await fetch(`http://localhost:8080/products/${id}`);
+    const res = await fetch(`${baseUrl}/products/${id}`);
     const data = await res.json();
     return data;
   } catch (error) {
@@ -34,7 +37,7 @@ export async function fetchProductById(id) {
 
 export async function fetchAllBrands() {
   try {
-    const res = await fetch("http://localhost:8080/brands");
+    const res = await fetch(`${baseUrl}/brands`);
     const data = await res.json();
     return data;
   } catch (error) {
@@ -43,7 +46,7 @@ export async function fetchAllBrands() {
 }
 export async function fetchAllCategories() {
   try {
-    const res = await fetch("http://localhost:8080/categories");
+    const res = await fetch(`${baseUrl}/categories`);
     const data = await res.json();
     return data;
   } catch (error) {

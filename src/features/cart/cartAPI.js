@@ -31,7 +31,7 @@ export async function addToCart(item) {
     console.log(item);
     try {
       const res = await fetch(`${baseUrl}/cart?id=${item.id}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
