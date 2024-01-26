@@ -9,7 +9,8 @@ import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAsync } from "../auth/authSlice";
 import { clearCartItems } from "../cart/cartSlice";
-
+import userIcon from "../../assets/user-icon.png"
+import appLogo from "../../assets/app-logo.jpg"
 const user = {
   name: "Tom Cook",
   email: "tom@example.com",
@@ -24,21 +25,21 @@ const navigation = [
 const userNavigation = [
   { name: "My Profile", link: "/profile" },
   { name: "My Orders", link: "/my-orders" },
-  { name: "Sign out", link: "#" },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-
 const NavBar = ({ children }) => {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
-  const handleLogout=()=>{
-    dispatch(clearCartItems())
-    dispatch(logoutUserAsync())
-  }
+  const {userInfo} = useSelector((state) => state.auth);
+  const handleLogout = () => {
+    dispatch(clearCartItems());
+    dispatch(logoutUserAsync());
+  };
+  console.log(!userInfo);
   return (
     <>
       <div className="sticky left-0 right-0 top-0 z-10">
@@ -51,35 +52,37 @@ const NavBar = ({ children }) => {
                     <div className="flex-shrink-0">
                       <Link to="/">
                         <img
-                          className="h-8 w-8"
-                          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                          className="h-10 w-10 rounded"
+                          src={appLogo}
                           alt="Your Company"
                         />
                       </Link>
                     </div>
                     <div className="hidden md:block">
+                      {/* NavBar Links */}
                       <div className="ml-10 flex items-baseline space-x-4">
-                        {navigation.map((item) => (
-                          <NavLink
-                            key={item.name}
-                            to={item.to}
-                            className={classNames(
-                              item.current
-                                ? "bg-gray-900 text-white"
-                                : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                              "rounded-md px-3 py-2 text-sm font-medium"
-                            )}
-                            aria-current={item.current ? "page" : undefined}
-                          >
-                            {item.name}
-                          </NavLink>
-                        ))}
-                        <div
-                          onClick={handleLogout}
+                        <NavLink
+                          to="/"
                           className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         >
-                          Sign Out
-                        </div>
+                          Products
+                        </NavLink>
+                        {!userInfo && (
+                          <NavLink
+                            to="/login"
+                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                          >
+                            Login
+                          </NavLink>
+                        )}
+                        {!userInfo && (
+                          <NavLink
+                            to="/signup"
+                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                          >
+                            Sign Up
+                          </NavLink>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -102,14 +105,14 @@ const NavBar = ({ children }) => {
                         </button>
                       </Link>
                       {/* Profile dropdown */}
-                      <Menu as="div" className="relative ml-3">
+                      {userInfo && <Menu as="div" className="relative ml-3">
                         <div>
                           <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="absolute -inset-1.5" />
                             <span className="sr-only">Open user menu</span>
                             <img
                               className="h-8 w-8 rounded-full"
-                              src={user.imageUrl}
+                              src={userIcon}
                               alt=""
                             />
                           </Menu.Button>
@@ -139,9 +142,24 @@ const NavBar = ({ children }) => {
                                 )}
                               </Menu.Item>
                             ))}
+                            {userInfo && (
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <div
+                                    onClick={handleLogout}
+                                    className={classNames(
+                                      active ? "bg-gray-100" : "",
+                                      "block px-4 py-2 text-sm text-gray-700"
+                                    )}
+                                  >
+                                    Sign Out
+                                  </div>
+                                )}
+                              </Menu.Item>
+                            )}
                           </Menu.Items>
                         </Transition>
-                      </Menu>
+                      </Menu>}
                     </div>
                   </div>
                   <div className="-mr-2 flex md:hidden">
@@ -167,38 +185,43 @@ const NavBar = ({ children }) => {
 
               <Disclosure.Panel className="md:hidden">
                 <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                  {navigation.map((item) => (
-                    <Disclosure.Button
-                      key={item.name}
-                      as="a"
-                      href={item.href}
-                      className={classNames(
-                        item.current
-                          ? "bg-gray-900 text-white"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "block rounded-md px-3 py-2 text-base font-medium"
-                      )}
-                      aria-current={item.current ? "page" : undefined}
-                    >
-                      {item.name}
-                    </Disclosure.Button>
-                  ))}
+                  <NavLink
+                    to="/"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white 
+                        block rounded-md px-3 py-2 text-base font-medium"
+                  >
+                    Products
+                  </NavLink>
+                  {!userInfo && <NavLink
+                    to="/login"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white 
+                        block rounded-md px-3 py-2 text-base font-medium"
+                  >
+                    Login
+                  </NavLink>}
+                  {!userInfo && <NavLink
+                    to="/signup"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white 
+                        block rounded-md px-3 py-2 text-base font-medium"
+                  >
+                    Sign Up
+                  </NavLink>}
                 </div>
-                <div className="border-t border-gray-700 pb-3 pt-4">
+                {userInfo && <div className="border-t border-gray-700 pb-3 pt-4">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
+                        src={userIcon}
                         alt=""
                       />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium leading-none text-white">
-                        {user.name}
+                        {userInfo.name}
                       </div>
                       <div className="text-sm font-medium leading-none text-gray-400">
-                        {user.email}
+                        {userInfo.email}
                       </div>
                     </div>
                     <Link to="/cart">
@@ -214,24 +237,35 @@ const NavBar = ({ children }) => {
                           aria-hidden="true"
                         />
                         <span className="inline-flex absolute items-center rounded-md bg-yellow-50 px-2 py-1 bottom-5 left-5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">
-                          3
+                          {items.length}
                         </span>
                       </button>
                     </Link>
                   </div>
                   <div className="mt-3 space-y-1 px-2">
-                    {userNavigation.map((item) => (
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                      >
-                        {item.name}
-                      </Disclosure.Button>
-                    ))}
+                    <NavLink
+                      to="/profile"
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white 
+                        block rounded-md px-3 py-2 text-base font-medium"
+                    >
+                      My Profile
+                    </NavLink>
+                    <NavLink
+                      to="/my-orders"
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white 
+                        block rounded-md px-3 py-2 text-base font-medium"
+                    >
+                      My Orders
+                    </NavLink>
+                    {userInfo && <div
+                      onClick={handleLogout}
+                      className="text-gray-300 hover:bg-gray-700 hover:text-white 
+                        block rounded-md px-3 py-2 text-base font-medium"
+                    >
+                      Sign Out
+                    </div>}
                   </div>
-                </div>
+                </div>}
               </Disclosure.Panel>
             </>
           )}
