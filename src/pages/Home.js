@@ -5,9 +5,8 @@ import ProductList from '../features/products/components/ProductList'
 const Home = () => {
   return (
     <>
-        <NavBar>
             <ProductList/>
-        </NavBar>     
+           
     </>
   )
 }

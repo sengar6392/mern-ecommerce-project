@@ -11,7 +11,8 @@ const Login = () => {
 
   useEffect(()=>{
     if(userInfo){
-      return navigate('/')
+      navigate('/')
+      alert("Logged in Successfully")
     }
   },[userInfo,navigate])
 

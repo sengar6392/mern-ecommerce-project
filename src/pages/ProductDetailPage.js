@@ -5,9 +5,9 @@ import ProductDetail from '../features/products/components/ProductDetail'
 const ProductDetailPage = () => {
   return (
     <>
-     <NavBar>
+
         <ProductDetail/>
-     </NavBar>
+     
     </>
   )
 }

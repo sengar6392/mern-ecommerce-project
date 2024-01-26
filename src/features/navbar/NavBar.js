@@ -8,6 +8,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAsync } from "../auth/authSlice";
+import { clearCartItems } from "../cart/cartSlice";
 
 const user = {
   name: "Tom Cook",
@@ -30,12 +31,17 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+
 const NavBar = ({ children }) => {
   const dispatch=useDispatch()
   const items = useSelector((state) => state.cart.items);
+  const handleLogout=()=>{
+    dispatch(clearCartItems())
+    dispatch(logoutUserAsync())
+  }
   return (
     <>
-      <div className="min-h-full">
+      <div className="sticky left-0 right-0 top-0 z-10">
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
             <>
@@ -69,7 +75,7 @@ const NavBar = ({ children }) => {
                           </NavLink>
                         ))}
                         <div
-                          onClick={()=>dispatch(logoutUserAsync())}
+                          onClick={handleLogout}
                           className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                         >
                           Sign Out

@@ -90,27 +90,31 @@ export default function ProductDetail() {
   const params = useParams();
   const dispatch = useDispatch();
   const product = useSelector((state) => state.product.selectedProduct);
-  const status = useSelector((state) => state.product.status);
-  const {userInfo} = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth);
+  const { items } = useSelector((state) => state.cart);
   // const [selectedColor, setSelectedColor] = useState(colors[0]);
   // const [selectedSize, setSelectedSize] = useState(sizes[2]);
 
   useEffect(() => {
     dispatch(fetchProductByIdAsync(params.id));
-  }, []);
+  }, [dispatch, params.id]);
 
   const handleAddToCart = (e) => {
-    if(userInfo){
-      e.preventDefault();
-      dispatch(
-        addToCartAsync({
-          quantity: 1,
-          product: product.id
-        })
-      );
-    }
-    else{
-      alert("Login first")
+    e.preventDefault();
+    if (userInfo) {
+      const res = items.find((ele) => ele.product.id === product.id);
+      if (!res) {
+        dispatch(
+          addToCartAsync({
+            quantity: 1,
+            product: product.id,
+          })
+        );
+      } else {
+        alert("You have already added this item to the cart");
+      }
+    } else {
+      alert("Login first");
     }
   };
   if (product)

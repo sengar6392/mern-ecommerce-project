@@ -1,16 +1,13 @@
-import React from 'react'
-import NavBar from '../features/navbar/NavBar'
-import UserOrders from '../features/order/components/UserOrder'
+import React from "react";
+import NavBar from "../features/navbar/NavBar";
+import UserOrders from "../features/order/components/UserOrder";
 
 const UserOrderPage = () => {
   return (
     <>
-    <NavBar>
-        
-        <UserOrders/>
-     </NavBar>
+      <UserOrders />
     </>
-  )
-}
+  );
+};
 
-export default UserOrderPage
+export default UserOrderPage;

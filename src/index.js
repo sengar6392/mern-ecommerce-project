@@ -3,16 +3,84 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import './index.css';
+import Home from './pages/Home';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import ProductDetailPage from './pages/ProductDetailPage';
+import Protected from './features/auth/components/Protected';
+import PageNotFound from './pages/404';
+import OrderSuccessPage from './pages/OrderSuccessPage';
+import UserOrderPage from './pages/UserOrderPage';
+import UserProfilePage from './pages/UserProfilePage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 
 const container = document.getElementById('root');
 const root = createRoot(container);
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element:<App/>,
+    children:[
+      {
+        path: "/",
+        element:<Home/>
+      },
+      {
+        path: "/login",
+        element: <LoginPage/>
+      },
+      {
+        path: "/signup",
+        element: <SignupPage/>
+      },
+      {
+        path: "/cart",
+        element:<CartPage/>
+      },
+      {
+        path: "/checkout",
+        element: <Protected><CheckoutPage/></Protected>,
+      },
+      {
+        path: "/product-detail/:id",
+        element: <ProductDetailPage/>
+      },
+      {
+        path: "/my-orders/",
+        element: <Protected><UserOrderPage/></Protected>,
+      },
+      {
+        path: "/order-success/:id",
+        element: <OrderSuccessPage/>,
+      },
+      {
+        path: "/profile",
+        element: <Protected><UserProfilePage/></Protected>,
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgotPasswordPage/>,
+      },
+      {
+        path: "*",
+        element: <PageNotFound/>,
+      },
+    ]
+  }
+]);
+
 root.render(
  
     <Provider store={store}>
-      <App />
+      <RouterProvider router={router}/>
     </Provider>
   
 );

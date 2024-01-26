@@ -16,9 +16,8 @@ export const addToCart = async (req, res) => {
   const id =req.user._id
   try {
     const doc = await Cart.create({...req.body,user:id});
-    const cartItems = await Cart.find({ user: id })
-      .populate("product");
-    res.status(200).json(cartItems);
+    const cartItem = await doc.populate("product");
+    res.status(200).json(cartItem);
   } catch (error) {
     console.log("Error in adding to cart", error);
     res.status(400).json(error);

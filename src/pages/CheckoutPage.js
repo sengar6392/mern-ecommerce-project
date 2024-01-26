@@ -319,13 +319,14 @@ const CheckoutPage = () => {
                       onClick={handlePayment}
                       type="radio"
                       value="card"
+                      disabled
                       className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                     />
                     <label
                       htmlFor="card"
-                      className="block text-sm font-medium leading-6 text-gray-900"
+                      className="block text-sm font-medium leading-6 text-gray-400"
                     >
-                      Card payment
+                     <span className="line-through">Card payment</span> <span className="text-red-500">Coming Soon</span>
                     </label>
                   </div>
                 </div>
