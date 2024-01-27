@@ -24,7 +24,7 @@ connectDB()
 // Global Middlewares
 server.use(cors({
  exposedHeaders:['X-Total-Count'],
- origin:'http://localhost:3000',
+ origin:'https://mern-ecommerce-project-one.vercel.app',
  credentials:true
 }));
 server.use(express.urlencoded({ extended: true }));
