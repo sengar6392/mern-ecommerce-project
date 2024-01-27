@@ -684,7 +684,7 @@ export default function ProductList() {
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
   const [page, setPage] = useState(1);
-  const [value, setValue] = useState("");
+  const [search, setSearch] = useState("");
   const filtersList = [
     {
       id: "category",
@@ -728,10 +728,10 @@ export default function ProductList() {
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
     timerRef.current = setTimeout(() => {
-      dispatch(fetchAllProductsAsync({ filter, sort, pagination }));
+      dispatch(fetchAllProductsAsync({ filter, sort, pagination, search }));
     }, 2000);
     return () => clearTimeout(timerRef.current);
-  }, [filter, sort, page, dispatch,value]);
+  }, [filter, sort, page, dispatch, search]);
 
   useEffect(() => {
     setPage(1);
@@ -862,7 +862,7 @@ export default function ProductList() {
           </Transition.Root>
 
           <div className="flex justify-center pt-6">
-            <SearchProducts value={value} setValue={setValue} />
+            <SearchProducts value={search} setValue={setSearch} />
           </div>
           <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
@@ -1008,8 +1008,9 @@ export default function ProductList() {
                 {/* Product grid */}
                 <div className="lg:col-span-3">
                   {/* Your content */}
-
-                  {!products.length ? (
+                  {status === "loading" ? (
+                    <div>Loading....</div>
+                  ) : !products.length ? (
                     <div className="w-full h-96 flex items-start justify-center">
                       <NoProductFound />
                     </div>

@@ -1,7 +1,7 @@
 import { config } from "../../config/api";
-const {baseUrl}=config
+const { baseUrl } = config;
 
-export async function fetchAllProducts(filter, sort, pagination) {
+export async function fetchAllProducts(filter, sort, pagination, search) {
   let queryString = "";
   for (let key in filter) {
     const categoryValues = filter[key];
@@ -14,6 +14,9 @@ export async function fetchAllProducts(filter, sort, pagination) {
   }
   for (let key in pagination) {
     queryString += `${key}=${pagination[key]}&`;
+  }
+  if (search.length > 0) {
+    queryString += `search=${search}`;
   }
   try {
     const res = await fetch(`${baseUrl}/products?${queryString}`);

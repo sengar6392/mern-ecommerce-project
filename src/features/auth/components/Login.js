@@ -7,17 +7,18 @@ import { enqueueSnackbar } from "notistack";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const {userInfo}=useSelector(state=>state.auth)
-  const navigate=useNavigate()
+  const { userInfo } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    if(userInfo && userInfo._id){
-      navigate('/')
-      enqueueSnackbar("Logged in Successfully",{variant:"success"})
-    }if(userInfo && userInfo.message){
-      enqueueSnackbar(userInfo.message,{variant:"error"})
+  useEffect(() => {
+    if (userInfo && userInfo._id) {
+      navigate("/");
+      enqueueSnackbar("Logged in Successfully", { variant: "success" });
     }
-  },[userInfo,navigate])
+    if (userInfo && userInfo.message) {
+      enqueueSnackbar(userInfo.message, { variant: "error" });
+    }
+  }, [userInfo, navigate]);
 
   const {
     register,
@@ -25,7 +26,7 @@ const Login = () => {
     watch,
     formState: { errors },
   } = useForm();
-  
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -41,7 +42,9 @@ const Login = () => {
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
               console.log("data", data);
-              dispatch(loginUserAsync({email:data.email,password:data.password}))
+              dispatch(
+                loginUserAsync({ email: data.email, password: data.password })
+              );
             })}
           >
             <div>
@@ -78,14 +81,17 @@ const Login = () => {
                 >
                   Password
                 </label>
-                <div className="text-sm">
+
+                {/* For Logout Feature */}
+
+                {/* <div className="text-sm">
                   <NavLink
                     to="/forgot-password"
                     className="font-semibold text-indigo-600 hover:text-indigo-500"
                   >
                     Forgot password?
                   </NavLink>
-                </div>
+                </div> */}
               </div>
               <div className="mt-2">
                 <input
