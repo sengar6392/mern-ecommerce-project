@@ -1,4 +1,4 @@
-import Product from "../models/product.js"
+import Product from "../models/product.js";
 
 export const createProduct = async (req, res) => {
   try {
@@ -17,6 +17,13 @@ export const fetchAllProducts = async (req, res) => {
   let query = Product.find(condition);
   let totalProductsQuery = Product.find(condition);
 
+  if (req.query.search) {
+    const regex = new RegExp(req.query.search.replace(/['"]+/g, ""), "i");
+    query = query.find({
+      $or: [{ title: { $regex: regex } }, { description: { $regex: regex } }],
+    });
+  }
+
   if (req.query.category) {
     query = query.find({ category: { $in: req.query.category.split(",") } });
     totalProductsQuery = totalProductsQuery.find({
@@ -30,8 +37,8 @@ export const fetchAllProducts = async (req, res) => {
     });
   }
 
-  const totalProducts=await totalProductsQuery.count().exec()
-  
+  const totalProducts = await totalProductsQuery.count().exec();
+
   if (req.query._page && req.query._limit) {
     const pageSize = req.query._limit;
     const page = req.query._page;
@@ -42,7 +49,7 @@ export const fetchAllProducts = async (req, res) => {
   }
   try {
     const docs = await query.exec();
-    res.set("X-Total-Count",totalProducts)
+    res.set("X-Total-Count", totalProducts);
     res.status(200).json(docs);
   } catch (error) {
     console.log("Error fetching all products: ", error);
