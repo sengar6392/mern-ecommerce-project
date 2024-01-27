@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserAsync } from "../features/auth/authSlice";
 import { createOrderAsync } from "../features/order/orderSlice";
+import { enqueueSnackbar } from "notistack";
 
 const CheckoutPage = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -29,11 +30,11 @@ const CheckoutPage = () => {
 
   const handleOrder = () => {
     if (!selectedAddress) {
-      alert("Please select an address");
+      enqueueSnackbar("Please select an address",{variant:"warning"});
     } else if (!paymentMethod) {
-      alert("Select a payment method");
+      enqueueSnackbar("Select a payment method",{variant:"warning"});
     } else if (!items.length) {
-      alert("No items in cart");
+      enqueueSnackbar("No items in cart",{variant:"warning"});
     } else {
       const order = {
         items,
@@ -151,10 +152,10 @@ const CheckoutPage = () => {
                     autoComplete="country-name"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
-                    <option selected>India</option>
-                    <option>United States</option>
+                    <option >India</option>
+                    {/* <option>United States</option>
                     <option>Canada</option>
-                    <option>Mexico</option>
+                    <option>Mexico</option> */}
                   </select>
                 </div>
               </div>

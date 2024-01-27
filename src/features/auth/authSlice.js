@@ -53,8 +53,14 @@ export const authSlice = createSlice({
       })
       .addCase(loginUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
+        console.log(action.payload);
         state.userInfo = action.payload;
         localStorage.setItem("userInfo", JSON.stringify(action.payload));
+      })
+      .addCase(loginUserAsync.rejected, (state, action) => {
+        state.status = "idle";
+        alert(action.payload);
+        localStorage.removeItem("userInfo");
       })
       .addCase(logoutUserAsync.pending, (state) => {
         state.status = "loading";

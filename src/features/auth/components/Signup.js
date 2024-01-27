@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUserAsync } from "../authSlice";
+import { useSnackbar } from "notistack";
 
 const Signup = () => {
   const dispatch = useDispatch()
@@ -12,12 +13,13 @@ const Signup = () => {
     watch,
     formState: { errors },
   } = useForm();
-  console.log("form errors", errors);
+  const {enqueueSnackbar}=useSnackbar()
   
   const {userInfo}=useSelector((state)=>state.auth)
   const navigate=useNavigate()
   useEffect(()=>{
     if(userInfo){
+      enqueueSnackbar("Registered Successfully",{variant:"success"})
       navigate('/')
       }
   },[userInfo,navigate])

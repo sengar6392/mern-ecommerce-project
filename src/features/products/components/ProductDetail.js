@@ -6,6 +6,7 @@ import { fetchProductById } from "../productAPI";
 import { fetchProductByIdAsync } from "../productSlice";
 import { useParams } from "react-router-dom";
 import { addToCartAsync } from "../../cart/cartSlice";
+import { useSnackbar } from "notistack";
 
 // const product = {
 //   name: 'Basic Tee 6-Pack',
@@ -94,7 +95,7 @@ export default function ProductDetail() {
   const { items } = useSelector((state) => state.cart);
   // const [selectedColor, setSelectedColor] = useState(colors[0]);
   // const [selectedSize, setSelectedSize] = useState(sizes[2]);
-
+  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     dispatch(fetchProductByIdAsync(params.id));
   }, [dispatch, params.id]);
@@ -110,11 +111,14 @@ export default function ProductDetail() {
             product: product.id,
           })
         );
+        enqueueSnackbar("Added to cart!", { variant: "success" });
       } else {
-        alert("You have already added this item to the cart");
+        enqueueSnackbar("You have already added this item to the cart", {
+          variant: "warning",
+        });
       }
     } else {
-      alert("Login first");
+      enqueueSnackbar("Login first",{variant:"error"});
     }
   };
   if (product)

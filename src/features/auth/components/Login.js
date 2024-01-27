@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { loginUserAsync } from "../authSlice";
+import { enqueueSnackbar } from "notistack";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -10,9 +11,11 @@ const Login = () => {
   const navigate=useNavigate()
 
   useEffect(()=>{
-    if(userInfo){
+    if(userInfo && userInfo._id){
       navigate('/')
-      alert("Logged in Successfully")
+      enqueueSnackbar("Logged in Successfully",{variant:"success"})
+    }if(userInfo && userInfo.message){
+      enqueueSnackbar(userInfo.message,{variant:"error"})
     }
   },[userInfo,navigate])
 

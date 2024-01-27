@@ -1,6 +1,5 @@
-
 import { config } from "../../config/api";
-const {baseUrl}=config
+const { baseUrl } = config;
 
 export async function registerUser(userData) {
   try {
@@ -9,12 +8,12 @@ export async function registerUser(userData) {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials:"include",
+      credentials: "include",
       body: JSON.stringify(userData),
     });
-    const data=await res.json()
-    console.log('user data',data);
-    return data
+    const data = await res.json();
+    console.log("user data", data);
+    return data;
   } catch (error) {
     console.log(error);
   }
@@ -26,7 +25,7 @@ export async function updateUser(user) {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials:"include",
+      credentials: "include",
       body: JSON.stringify(user),
     });
     const data = await res.json();
@@ -42,10 +41,10 @@ export async function loginUser(loginInfo) {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials:"include",
+      credentials: "include",
       body: JSON.stringify(loginInfo),
     });
-    const data=await res.json()
+    const data = await res.json();
     return data
   } catch (error) {
     console.log(error);
@@ -55,11 +54,11 @@ export async function logoutUser() {
   try {
     const res = await fetch(`${baseUrl}/users/logout`, {
       method: "POST",
-      credentials:"include"
+      credentials: "include",
     });
-    const data=await res.json()
+    const data = await res.json();
     console.log(data);
-    return data
+    return data;
   } catch (error) {
     console.log(error);
   }
