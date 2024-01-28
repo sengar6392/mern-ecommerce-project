@@ -92,7 +92,7 @@ export default function ProductDetail() {
   const dispatch = useDispatch();
   const product = useSelector((state) => state.product.selectedProduct);
   const { userInfo } = useSelector((state) => state.auth);
-  const { items } = useSelector((state) => state.cart);
+  const { items,status } = useSelector((state) => state.cart);
   // const [selectedColor, setSelectedColor] = useState(colors[0]);
   // const [selectedSize, setSelectedSize] = useState(sizes[2]);
   const { enqueueSnackbar } = useSnackbar();
@@ -367,7 +367,7 @@ export default function ProductDetail() {
                     onClick={handleAddToCart}
                     className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
-                    Add to Cart
+                    {status==="loading"?("Adding....."):("Add to Cart")}
                   </button>
                 </form>
               </div>

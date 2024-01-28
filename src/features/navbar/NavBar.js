@@ -28,7 +28,7 @@ function classNames(...classes) {
 
 const NavBar = ({ children }) => {
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.cart.items);
+  const { items, status } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
   const handleLogout = () => {
     dispatch(clearCartItems());
@@ -95,10 +95,12 @@ const NavBar = ({ children }) => {
                             aria-hidden="true"
                           />
                           <span className="inline-flex absolute items-center rounded-md bg-yellow-50 px-2 py-1 left-5 bottom-5 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">
-                            {items.reduce(
-                              (acc, item) => acc + item.quantity,
-                              0
-                            )}
+                            {status === "loading"
+                              ? "..."
+                              : items.reduce(
+                                  (acc, item) => acc + item.quantity,
+                                  0
+                                )}
                           </span>
                         </button>
                       </Link>

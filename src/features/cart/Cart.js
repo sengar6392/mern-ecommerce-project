@@ -8,8 +8,7 @@ import { deleteCartItemAsync, updateCartItemAsync } from "./cartSlice";
 
 const Cart = ({cartPage, checkoutPage,handleOrder}) => {
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.cart.items);
-  const status = useSelector((state) => state.cart.status);
+  const {items,status} = useSelector((state) => state.cart);
 
   const totalPrice = items.reduce(
     (amount, item) => item.product.price * item.quantity + amount,

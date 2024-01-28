@@ -696,7 +696,7 @@ export default function ProductList() {
       name: "Brands",
       options: brandOptions,
     },
-  ];console.log(filtersList);
+  ];
 
   const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
   const handleFilter = (e, section, option) => {
@@ -727,11 +727,15 @@ export default function ProductList() {
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
-    timerRef.current = setTimeout(() => {
+    if (search.length) {
+      timerRef.current = setTimeout(() => {
+        dispatch(fetchAllProductsAsync({ filter, sort, pagination, search }));
+      }, 2000);
+    } else {
       dispatch(fetchAllProductsAsync({ filter, sort, pagination, search }));
-    }, 2000);
+    }
     return () => clearTimeout(timerRef.current);
-  }, [filter, sort, page, dispatch, search]);
+  }, [filter, sort, search, page, dispatch]);
 
   useEffect(() => {
     setPage(1);
@@ -1009,7 +1013,12 @@ export default function ProductList() {
                 <div className="lg:col-span-3">
                   {/* Your content */}
                   {status === "loading" ? (
-                    <div>Loading....</div>
+                    <div className="w-full h-96 flex flex-col items-center justify-start">
+                      <h1 className="text-4xl">Loading....</h1>
+                      <p className="text-sm">
+                        For the first time it may take some time
+                      </p>
+                    </div>
                   ) : !products.length ? (
                     <div className="w-full h-96 flex items-start justify-center">
                       <NoProductFound />
