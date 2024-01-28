@@ -53,7 +53,7 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     clearCartItems: (state) => {
-      state.items=[]
+      state.items = [];
     },
   },
 
@@ -71,7 +71,7 @@ export const cartSlice = createSlice({
       })
       .addCase(fetchItemsByUserIDAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.items = action.payload;
+        if (action.payload) state.items = action.payload;
       })
       .addCase(updateCartItemAsync.pending, (state) => {
         state.status = "loading";
@@ -103,6 +103,6 @@ export const cartSlice = createSlice({
   },
 });
 
-export const {clearCartItems}=cartSlice.actions
+export const { clearCartItems } = cartSlice.actions;
 
 export default cartSlice.reducer;

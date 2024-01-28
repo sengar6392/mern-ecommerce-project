@@ -1,3 +1,4 @@
+import { enqueueSnackbar } from "notistack";
 import { config } from "../../config/api";
 const { baseUrl } = config;
 
@@ -22,8 +23,7 @@ export async function fetchAllProducts(filter, sort, pagination, search) {
     const res = await fetch(`${baseUrl}/products?${queryString}`);
     const products = await res.json();
     const totalProducts = await res.headers.get("x-total-count");
-
-    return { products, totalProducts };
+    if (res.status === 200) return { products, totalProducts };
   } catch (error) {
     console.log(error);
   }
@@ -42,7 +42,7 @@ export async function fetchAllBrands() {
   try {
     const res = await fetch(`${baseUrl}/brands`);
     const data = await res.json();
-    return data;
+    if (res.status === 200) return data;
   } catch (error) {
     console.log(error);
   }
@@ -51,7 +51,7 @@ export async function fetchAllCategories() {
   try {
     const res = await fetch(`${baseUrl}/categories`);
     const data = await res.json();
-    return data;
+    if (res.status === 200) return data;
   } catch (error) {
     console.log(error);
   }

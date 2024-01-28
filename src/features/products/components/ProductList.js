@@ -696,7 +696,7 @@ export default function ProductList() {
       name: "Brands",
       options: brandOptions,
     },
-  ];
+  ];console.log(filtersList);
 
   const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
   const handleFilter = (e, section, option) => {
