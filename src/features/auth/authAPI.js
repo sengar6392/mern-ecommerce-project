@@ -1,3 +1,4 @@
+import { enqueueSnackbar } from "notistack";
 import { config } from "../../config/api";
 const { baseUrl } = config;
 
@@ -45,7 +46,11 @@ export async function loginUser(loginInfo) {
       body: JSON.stringify(loginInfo),
     });
     const data = await res.json();
-    return data
+    if (res.status === 200) {
+      return data;
+    }else{
+      enqueueSnackbar(data.message,{variant:"error"})
+    }
   } catch (error) {
     console.log(error);
   }

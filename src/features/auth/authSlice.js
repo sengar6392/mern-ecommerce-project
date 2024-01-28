@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { updateUser, loginUser, registerUser, logoutUser } from "./authAPI";
+import { enqueueSnackbar } from "notistack";
 
 export const registerUserAsync = createAsyncThunk(
   "user/createUser",
@@ -53,14 +54,10 @@ export const authSlice = createSlice({
       })
       .addCase(loginUserAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        console.log(action.payload);
-        state.userInfo = action.payload;
-        localStorage.setItem("userInfo", JSON.stringify(action.payload));
-      })
-      .addCase(loginUserAsync.rejected, (state, action) => {
-        state.status = "idle";
-        alert(action.payload);
-        localStorage.removeItem("userInfo");
+        if (action.payload) {
+          state.userInfo = action.payload;
+          localStorage.setItem("userInfo", JSON.stringify(action.payload));
+        }
       })
       .addCase(logoutUserAsync.pending, (state) => {
         state.status = "loading";

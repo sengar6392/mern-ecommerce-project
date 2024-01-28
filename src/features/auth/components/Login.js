@@ -11,12 +11,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userInfo && userInfo._id) {
+    if (userInfo) {
       navigate("/");
       enqueueSnackbar("Logged in Successfully", { variant: "success" });
-    }
-    if (userInfo && userInfo.message) {
-      enqueueSnackbar(userInfo.message, { variant: "error" });
     }
   }, [userInfo, navigate]);
 
